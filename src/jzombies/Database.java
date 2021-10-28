@@ -11,9 +11,9 @@ import java.sql.Statement;
 import org.apache.commons.lang3.RandomStringUtils;
 
 public class Database {
-	String tt = RandomStringUtils.random(8, true, false);
-    String url = "jdbc:sqlite:/Users/z.x/testDB/"+tt+".db";
-    
+//	static String tt = RandomStringUtils.random(8, true, false);
+//    String url = "jdbc:sqlite:/Users/z.x/testDB/"+tt+".db";
+	String url = "jdbc:sqlite:/Users/z.x/test.db";
 	public Database() {
 	    String person = "CREATE TABLE \"person\" (\n" + 
 	    		"	\"name\"	TEXT UNIQUE,\n" + 
@@ -25,7 +25,6 @@ public class Database {
 	    		"	\"x\"	REAL,\n" + 
 	    		"	\"y\"	REAL,\n" + 
 	    		"	FOREIGN KEY(\"name\") REFERENCES \"person\"(\"name\") ON UPDATE CASCADE,\n" + 
-	    		"	UNIQUE(\"x\",\"y\"),\n" + 
 	    		"	PRIMARY KEY(\"name\")\n" + 
 	    		");";
 	    
@@ -95,13 +94,13 @@ public class Database {
 		
 	}
 
-	public void addPoint(String name, double d, double f) {
+	public void addPoint(String name, int d, int f) {
         String point = "INSERT INTO point(name,x,y) VALUES(?,?,?)";
         try (Connection connection = this.connect();
                 PreparedStatement addPoint = connection.prepareStatement(point);) {
         	addPoint.setString(1, name);
-        	addPoint.setDouble(2, d);
-        	addPoint.setDouble(3, f);
+        	addPoint.setInt(2, d);
+        	addPoint.setInt(3, f);
         	addPoint.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());

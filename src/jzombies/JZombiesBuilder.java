@@ -29,7 +29,7 @@ import repast.simphony.space.grid.WrapAroundBorders;
 
 // initialize the simulation
 public class JZombiesBuilder implements ContextBuilder<Object> {
-
+	Database dbs;
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -43,7 +43,7 @@ public class JZombiesBuilder implements ContextBuilder<Object> {
 	@Override
 	public Context build(Context<Object> context) {
 		context.setId("jzombies"); //ID should be project name.
-		Database dbs = Database.create();
+		this.dbs = Database.create();
 		// build a infection network, used in infect() from zombie class.
 		NetworkBuilder<Object> netBuilder = new NetworkBuilder<Object>(
 				"infection network", context, true);
@@ -66,7 +66,7 @@ public class JZombiesBuilder implements ContextBuilder<Object> {
 		//SimpleGridAdder: not give location,but via build().
 		Grid<Object> grid = gridFactory.createGrid("grid", context,
 				new GridBuilderParameters<Object>(new WrapAroundBorders(),
-						new SimpleGridAdder<Object>(), false, 50, 50)); 
+						new SimpleGridAdder<Object>(), true, 50, 50)); //IF FALSE null pointer inital
 
 		//create agents.
 		Parameters params = RunEnvironment.getInstance().getParameters();
@@ -79,7 +79,7 @@ public class JZombiesBuilder implements ContextBuilder<Object> {
 			dbs.addPerson(zName);
 			dbs.addIsIll(zName);
 			
-			context.add(new Zombie(space, grid,zName,dbs));
+			context.add(new Zombie(space, grid, zName, dbs));
 		}
 
 		int humanCount = (Integer) params.getValue("human_count");
@@ -87,7 +87,7 @@ public class JZombiesBuilder implements ContextBuilder<Object> {
 			int energy = RandomHelper.nextIntFromTo(4, 10);
 			String hName = RandomStringUtils.random(8, true, true);
 			dbs.addPerson(hName);
-			context.add(new Human(space, grid,hName, energy));
+			context.add(new Human(space, grid,hName, energy, dbs));
 		}
 
 		// move agent to grid location that corresponds to continouspace location
@@ -96,23 +96,26 @@ public class JZombiesBuilder implements ContextBuilder<Object> {
 			grid.moveTo(obj, (int) pt.getX(), (int) pt.getY());
 			try {
 				String name= (String) FieldUtils.readField(obj, "name", true);
-				dbs.addPoint(name, pt.getX(), pt.getY());
+				dbs.addPoint(name, (int) pt.getX(), (int) pt.getY());
 			} catch (IllegalAccessException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}			
 		}
 		
-//		try {
-//			TransmissionModel trans = new TransmissionModel();
-//		} catch (JepException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+
 		
 		if (RunEnvironment.getInstance().isBatch()) {
 			RunEnvironment.getInstance().endAt(20);
 		}
+		try {
+			TransmissionModel trans = TransmissionModel.create();
+			trans.loadModel();
+			trans.getResFromJep();
+	} catch (JepException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
 
 
 		return context;

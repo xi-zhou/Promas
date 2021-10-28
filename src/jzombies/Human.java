@@ -27,21 +27,20 @@ public class Human {
 	private Grid<Object> grid;
 	private int energy, startingEnergy;
 	final private String name;
-	//final private Database dbs;
+	final private Database dbs;
 	
-	public Human(ContinuousSpace<Object> space, Grid<Object> grid, String hName, int energy) {
+	public Human(ContinuousSpace<Object> space, Grid<Object> grid, String hName, int energy,Database dbs) {
 		this.space = space;
 		this.grid = grid;
 		this.name=hName;
 		this.energy = startingEnergy = energy;
-		//this.dbs=dbs;
+		this.dbs=dbs;
 	}
 	
 	// trigger this method when zombie move into human neigbhour.
 	@Watch(watcheeClassName = "jzombies.Zombie", watcheeFieldNames = "moved", 
 			query = "within_vn 1", whenToTrigger = WatcherTriggerSchedule.IMMEDIATE)
 	public void run() {
-		System.out.println("run");
 		// get the grid location of this Human
 		GridPoint pt = grid.getLocation(this);
 		//dbs.addPoint(name,pt.getX(),pt.getY());
@@ -52,8 +51,7 @@ public class Human {
 		List<GridCell<Zombie>> gridCells = nghCreator.getNeighborhood(true);
 		SimUtilities.shuffle(gridCells, RandomHelper.getUniform());
 
-		GridPoint pointWithLeastZombies = gridCells.get(RandomHelper.nextIntFromTo(0, gridCells.size() - 1)).getPoint();
-//		int maxCount = -1;;
+//		GridPoint pointWithLeastZombies = null;
 //		int minCount = Integer.MAX_VALUE;
 //		for (GridCell<Zombie> cell : gridCells) {
 //			if (cell.size() < minCount) {
@@ -61,7 +59,8 @@ public class Human {
 //				minCount = cell.size();
 //			}
 //		}
-//		
+		GridPoint pointWithLeastZombies = gridCells.get(RandomHelper.nextIntFromTo(0, gridCells.size()-1)).getPoint();
+		
 		if (energy > 0) {
 			moveTowards(pointWithLeastZombies);
 		} else {
@@ -69,7 +68,6 @@ public class Human {
 		}
 	}
 	
-
 	public void moveTowards(GridPoint pt) {
 		// only move if we are not already in this grid location
 		if (!pt.equals(grid.getLocation(this))) {
@@ -79,8 +77,8 @@ public class Human {
 			space.moveByVector(this, 2, angle, 0);
 			myPoint = space.getLocation(this);
 			grid.moveTo(this, (int)myPoint.getX(), (int)myPoint.getY());
-			//dbs.updatePoint(this.name, myPoint.getX(), myPoint.getY());
-			energy--;
+			dbs.updatePoint(name,  myPoint.getX(), myPoint.getY());
+			//energy--;
 		}
 	}
 
