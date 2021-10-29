@@ -51,14 +51,7 @@ public class Human {
 		List<GridCell<Zombie>> gridCells = nghCreator.getNeighborhood(true);
 		SimUtilities.shuffle(gridCells, RandomHelper.getUniform());
 
-//		GridPoint pointWithLeastZombies = null;
-//		int minCount = Integer.MAX_VALUE;
-//		for (GridCell<Zombie> cell : gridCells) {
-//			if (cell.size() < minCount) {
-//				pointWithLeastZombies = cell.getPoint();
-//				minCount = cell.size();
-//			}
-//		}
+
 		GridPoint pointWithLeastZombies = gridCells.get(RandomHelper.nextIntFromTo(0, gridCells.size()-1)).getPoint();
 		
 		if (energy > 0) {
@@ -78,7 +71,7 @@ public class Human {
 			myPoint = space.getLocation(this);
 			grid.moveTo(this, (int)myPoint.getX(), (int)myPoint.getY());
 			dbs.updatePoint(name,  myPoint.getX(), myPoint.getY());
-			//energy--;
+			energy--;
 		}
 	}
 

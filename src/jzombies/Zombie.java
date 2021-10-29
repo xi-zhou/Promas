@@ -6,6 +6,9 @@ package jzombies;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.reflect.FieldUtils;
+
+import jep.JepException;
 import repast.simphony.context.Context;
 import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.query.space.grid.GridCell;
@@ -31,12 +34,20 @@ public class Zombie {
 	private boolean moved;
 	final private String name;
 	final private Database dbs;
+	private TransmissionModel trans ;
 
 	public Zombie(ContinuousSpace<Object> space, Grid<Object> grid, String zName, Database dbs) {
 		this.space = space;
 		this.grid = grid;
 		this.name=zName;
 		this.dbs=dbs;
+		
+		try {
+			trans = TransmissionModel.create();
+		} catch (JepException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	// call this method on every iteration of simulation
@@ -52,14 +63,6 @@ public class Zombie {
 		List<GridCell<Human>> gridCells = nghCreator.getNeighborhood(true);
 		SimUtilities.shuffle(gridCells, RandomHelper.getUniform());
 
-//		GridPoint pointWithMostHumans = null;
-//		int maxCount = -1;
-//		for (GridCell<Human> cell : gridCells) {
-//			if (cell.size() > maxCount) {
-//				pointWithMostHumans = cell.getPoint();
-//				maxCount = cell.size();
-//			}
-//		}
 		GridPoint pointWithMostHumans = gridCells.get(RandomHelper.nextIntFromTo(0, gridCells.size()-1)).getPoint();
 		moveTowards(pointWithMostHumans);
 		infect();
@@ -81,6 +84,7 @@ public class Zombie {
 	}
 
 	public void infect() {
+		ArrayList<String> infectedPerson = new ArrayList<String>();
 		GridPoint pt = grid.getLocation(this);
 		List<Object> humans = new ArrayList<Object>();
 		for (Object obj : grid.getObjectsAt(pt.getX(), pt.getY())) {
@@ -88,20 +92,52 @@ public class Zombie {
 				humans.add(obj);
 			}
 		}
+		
+		try {
+		//trans= TransmissionModel.create();
+		trans.loadModel();
+		trans.getResFromJep();
+		infectedPerson=trans.getInfectedPerson();
+		trans.closeJep();
+		} catch (JepException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+		}
+
 
 		if (humans.size() > 0) {
-			int index = RandomHelper.nextIntFromTo(0, humans.size() - 1);
-			Object obj = humans.get(index);
+			for(int i = 0; i<humans.size();i++) {
+
+			Object obj = humans.get(i);
+			String hName = null;
+			try {
+				hName = (String) FieldUtils.readField(obj, "name", true);
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			if(infectedPerson.contains(hName)) {
+				
+			
 			NdPoint spacePt = space.getLocation(obj);
 			Context<Object> context = ContextUtils.getContext(obj);
 			context.remove(obj);
+			
 			Zombie zombie = new Zombie(space, grid, name, dbs);
+
+			boolean isExist = dbs.checkExistIll(hName);
+			if(!isExist) {
+				dbs.addIsIll(infectedPerson.get(i));
+				System.out.println("new infection"+hName);
+			}
 			context.add(zombie);
 			space.moveTo(zombie, spacePt.getX(), spacePt.getY());
 			grid.moveTo(zombie, pt.getX(), pt.getY());
 			
 			Network<Object> net = (Network<Object>)context.getProjection("infection network");
 			net.addEdge(this, zombie);
+		}
+			}
 		}
 	}
 }

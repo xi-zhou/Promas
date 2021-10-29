@@ -73,8 +73,10 @@ public class JZombiesBuilder implements ContextBuilder<Object> {
 		int zombieCount = (Integer) params.getValue("zombie_count");
 		for (int i = 0; i < zombieCount; i++) {
 			String zName = RandomStringUtils.random(8, true, true);
+			//TransmissionModel trans = null;
 			// TODO: add name and position to database
 			//database.addPosition(zname,doublex,doubley)
+
 			
 			dbs.addPerson(zName);
 			dbs.addIsIll(zName);
@@ -86,6 +88,7 @@ public class JZombiesBuilder implements ContextBuilder<Object> {
 		for (int i = 0; i < humanCount; i++) {
 			int energy = RandomHelper.nextIntFromTo(4, 10);
 			String hName = RandomStringUtils.random(8, true, true);
+
 			dbs.addPerson(hName);
 			context.add(new Human(space, grid,hName, energy, dbs));
 		}
@@ -108,14 +111,14 @@ public class JZombiesBuilder implements ContextBuilder<Object> {
 		if (RunEnvironment.getInstance().isBatch()) {
 			RunEnvironment.getInstance().endAt(20);
 		}
-		try {
-			TransmissionModel trans = TransmissionModel.create();
-			trans.loadModel();
-			trans.getResFromJep();
-	} catch (JepException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
+//		try {
+//			TransmissionModel trans = TransmissionModel.create();
+//			trans.loadModel();
+//			trans.getResFromJep();
+//	} catch (JepException e) {
+//		// TODO Auto-generated catch block
+//		e.printStackTrace();
+//	}
 
 
 		return context;
