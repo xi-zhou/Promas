@@ -154,13 +154,8 @@ public class Database {
       e.printStackTrace();
     }
 
-    //System.out.println("dbs  all infection list" + allInfection);
     allInfection.removeAll(oldInfection);
-    //System.out.println(" dbs new infection list" + allInfection);
     return allInfection;
-
-    // newInfection = allInfection;
-    // return newInfection;
 
   }
 

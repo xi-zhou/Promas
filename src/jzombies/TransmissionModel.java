@@ -12,34 +12,26 @@ import jep.JepConfig;
 import jep.JepException;
 import jep.SharedInterpreter;
 import jep.SubInterpreter;
+import repast.simphony.engine.schedule.ScheduledMethod;
 
-/**
- * @author z.x
- *
- */
-/**
- * @author z.x
- *
- */
+
 public class TransmissionModel {
-  private ArrayList<String> infectedPerson = new ArrayList<String>();
-  String res;
-  SharedInterpreter interp;
+  private static ArrayList<String> infectedPerson = new ArrayList<String>();
+  static String res;
+  static SharedInterpreter interp;
 
 
   TransmissionModel() {}
 
-  // void setJepConfig() throws JepException {
-  // config= new JepConfig().setRedirectOutputStreams(true);
-  // SharedInterpreter.setConfig(config);
-  //
-  // }
   static TransmissionModel create() throws JepException {
     return new TransmissionModel();
 
   }
-
-  public synchronized void loadModel() throws JepException {
+  
+  @ScheduledMethod(start = 0.5, interval = 1)
+  public static synchronized void loadModel() throws JepException {
+    long startTime = System.currentTimeMillis();
+    System.out.println("load model...");
     interp = new SharedInterpreter();
     interp.eval("from jep import redirect_streams");
     interp.eval("redirect_streams.setup()");
@@ -61,18 +53,21 @@ public class TransmissionModel {
     interp.eval("js = json.dumps(res)");
     res = interp.getValue("js", String.class);
     interp.close();
+    long endTime = System.currentTimeMillis();
+    System.out.println("Calculation took " + (endTime - startTime) + " milliseconds");
+    getResFromJep();
   }
 
-  public void getResFromJep() {
+  public static void getResFromJep() {
     Gson gson = new Gson();
     Type type = new TypeToken<Map<String, Float>>() {}.getType();
     Map<String, Float> myMap = gson.fromJson(res, type);
 
     for (Entry<String, Float> entry : myMap.entrySet()) {
-      if (entry.getValue() >= 0.05) { // only infected term
+      if (entry.getValue() >= 0.05) { 
         String name[] = entry.getKey().split("'");
         // System.out.println(entry.getKey()+" : "+entry.getValue());
-        this.infectedPerson.add(name[1]);
+        infectedPerson.add(name[1]);
       }
     }
   }
@@ -83,17 +78,11 @@ public class TransmissionModel {
    * 
    * @return list contains current all infected person
    */
-  public ArrayList<String> getInfectedPerson() {
+  public static ArrayList<String> getInfectedPerson() {
     return infectedPerson;
   }
 
-//  public void closeJep() {
-//    try {
-//      interp.close();
-//    } catch (JepException e) {
-//      e.printStackTrace();
-//    }
-//  }
+
 }
 
 

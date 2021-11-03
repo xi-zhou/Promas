@@ -7,14 +7,14 @@
 									
 		/>
 				<parameter name="human_count" displayName="Human Count" type="int" 
-						defaultValue="20" 
+						defaultValue="50" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 									
 		/>
 			
 				<parameter name="zombie_count" displayName="Zombie Count" type="int" 
-						defaultValue="5" 
+						defaultValue="25" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 									

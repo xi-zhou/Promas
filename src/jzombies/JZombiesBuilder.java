@@ -50,14 +50,14 @@ public class JZombiesBuilder implements ContextBuilder<Object> {
     // name;context;adder with random location; border of grid;dimension.
     ContinuousSpace<Object> space =
         spaceFactory.createContinuousSpace("space", context, new RandomCartesianAdder<Object>(),
-            new repast.simphony.space.continuous.WrapAroundBorders(), 10, 10);
+            new repast.simphony.space.continuous.WrapAroundBorders(), 20, 20);
 
 
     GridFactory gridFactory = GridFactoryFinder.createGridFactory(null);
     // true means two object in the same grid.
     // SimpleGridAdder: not give location,but via build().
     Grid<Object> grid = gridFactory.createGrid("grid", context, new GridBuilderParameters<Object>(
-        new WrapAroundBorders(), new SimpleGridAdder<Object>(), true, 10, 10)); // IF FALSE null
+        new WrapAroundBorders(), new SimpleGridAdder<Object>(), true, 20, 20)); // IF FALSE null
                                                                                 // pointer inital
 
     // create agents.
@@ -69,7 +69,7 @@ public class JZombiesBuilder implements ContextBuilder<Object> {
       dbs.addIsIll(zName);
 
       context.add(new Zombie(space, grid, zName, dbs));
-      System.out.println("ini zombie "+zName);
+      System.out.println("ini zombie " + zName);
     }
 
     int humanCount = (Integer) params.getValue("human_count");

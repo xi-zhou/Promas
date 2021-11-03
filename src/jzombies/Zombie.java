@@ -29,7 +29,7 @@ public class Zombie {
   private boolean moved;
   final private String name;
   final private Database dbs;
-  private TransmissionModel trans;
+  // private TransmissionModel trans;
 
   public Zombie(ContinuousSpace<Object> space, Grid<Object> grid, String zName, Database dbs) {
     this.space = space;
@@ -37,12 +37,12 @@ public class Zombie {
     this.name = zName;
     this.dbs = dbs;
 
-    try {
-      trans = TransmissionModel.create();
-    } catch (JepException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
+    // try {
+    // trans = TransmissionModel.create();
+    // } catch (JepException e) {
+    // // TODO Auto-generated catch block
+    // e.printStackTrace();
+    // }
   }
 
   // call this method on every iteration of simulation
@@ -53,7 +53,7 @@ public class Zombie {
 
     // use the GridCellNgh class to create GridCells for
     // the surrounding neighborhood.
-    GridCellNgh<Human> nghCreator = new GridCellNgh<Human>(grid, pt, Human.class, 3, 3);
+    GridCellNgh<Human> nghCreator = new GridCellNgh<Human>(grid, pt, Human.class, 4, 4);
     List<GridCell<Human>> gridCells = nghCreator.getNeighborhood(true);
     SimUtilities.shuffle(gridCells, RandomHelper.getUniform());
 
@@ -95,18 +95,12 @@ public class Zombie {
       }
     }
 
-    try {
-      trans.loadModel();
-      trans.getResFromJep();
-      modelAllInfection = trans.getInfectedPerson();
-      //System.out.println(name+" all infection list" + modelAllInfection);
-    } catch (JepException e) {
-      e.printStackTrace();
-    }
+
+    modelAllInfection = TransmissionModel.getInfectedPerson();
 
     newInfection = dbs.findNewInfected(modelAllInfection);
 
-    System.out.println(name+" new infection list" + newInfection);
+    System.out.println(name + " new infection list" + newInfection);
 
 
     // for each zombie check if there are humans in its moore neighborhood, if yes than for each
@@ -122,7 +116,7 @@ public class Zombie {
         } catch (IllegalAccessException e) {
           e.printStackTrace();
         }
-        //System.out.println("human name" + hName);
+        // System.out.println("human name" + hName);
         if (newInfection.contains(hName)) {
           dbs.addIsIll(hName);
           System.out.println("Infecting" + hName);
@@ -140,8 +134,9 @@ public class Zombie {
 
         }
       }
-    }else {
-      System.out.println(name+" infection detected but not in this ngh,this ngh contains no human");
+    } else {
+      System.out
+          .println(name + " infection detected but not in this ngh,this ngh contains no human");
     }
 
   }

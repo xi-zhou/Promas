@@ -33,9 +33,7 @@ public class Human {
     this.dbs = dbs;
   }
 
-  // trigger this method when zombie move into human neigbhour.
-//  @Watch(watcheeClassName = "jzombies.Zombie", watcheeFieldNames = "moved", query = "within_vn 1",
-//      whenToTrigger = WatcherTriggerSchedule.IMMEDIATE)
+
   @ScheduledMethod(start = 1, interval = 1)
   public void run() {
     // get the grid location of this Human
@@ -59,6 +57,7 @@ public class Human {
 
   /**
    * Move to a random point in Moore Neighborhood and update position in dbs
+   * 
    * @param pt random point
    */
   public void moveTowards(GridPoint pt) {
