@@ -29,99 +29,76 @@ import repast.simphony.space.grid.WrapAroundBorders;
 
 // initialize the simulation
 public class JZombiesBuilder implements ContextBuilder<Object> {
-	Database dbs;
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * repast.simphony.dataLoader.ContextBuilder#build(repast.simphony.context
-	 * .Context)
-	 */
-	
-	//build a context for every agents and agentstype.
-	// context: menge von agents.
-	@Override
-	public Context build(Context<Object> context) {
-		context.setId("jzombies"); //ID should be project name.
-		this.dbs = Database.create();
-		// build a infection network, used in infect() from zombie class.
-		NetworkBuilder<Object> netBuilder = new NetworkBuilder<Object>(
-				"infection network", context, true);
-		netBuilder.buildNetwork();
-		
-		
-		// use factory method,avoid using constrcutor.
-		ContinuousSpaceFactory spaceFactory = ContinuousSpaceFactoryFinder
-				.createContinuousSpaceFactory(null);
-		//use factory to create instance, create continuousSpace named space,every object added in here.
-		// name;context;adder with random location; border of grid;dimension.
-		ContinuousSpace<Object> space = spaceFactory.createContinuousSpace(
-				"space", context, new RandomCartesianAdder<Object>(),
-				new repast.simphony.space.continuous.WrapAroundBorders(), 50,
-				50);
+  Database dbs;
 
-		
-		GridFactory gridFactory = GridFactoryFinder.createGridFactory(null);
-		//true means two object in the same grid.
-		//SimpleGridAdder: not give location,but via build().
-		Grid<Object> grid = gridFactory.createGrid("grid", context,
-				new GridBuilderParameters<Object>(new WrapAroundBorders(),
-						new SimpleGridAdder<Object>(), true, 50, 50)); //IF FALSE null pointer inital
-
-		//create agents.
-		Parameters params = RunEnvironment.getInstance().getParameters();
-		int zombieCount = (Integer) params.getValue("zombie_count");
-		for (int i = 0; i < zombieCount; i++) {
-			String zName = RandomStringUtils.random(8, true, true);
-			//TransmissionModel trans = null;
-			// TODO: add name and position to database
-			//database.addPosition(zname,doublex,doubley)
-
-			
-			dbs.addPerson(zName);
-			dbs.addIsIll(zName);
-			
-			context.add(new Zombie(space, grid, zName, dbs));
-		}
-
-		int humanCount = (Integer) params.getValue("human_count");
-		for (int i = 0; i < humanCount; i++) {
-			int energy = RandomHelper.nextIntFromTo(4, 10);
-			String hName = RandomStringUtils.random(8, true, true);
-
-			dbs.addPerson(hName);
-			context.add(new Human(space, grid,hName, energy, dbs));
-		}
-
-		// move agent to grid location that corresponds to continouspace location
-		for (Object obj : context.getObjects(Object.class)) {
-			NdPoint pt = space.getLocation(obj);
-			grid.moveTo(obj, (int) pt.getX(), (int) pt.getY());
-			try {
-				String name= (String) FieldUtils.readField(obj, "name", true);
-				dbs.addPoint(name, (int) pt.getX(), (int) pt.getY());
-			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}			
-		}
-		
-
-		
-		if (RunEnvironment.getInstance().isBatch()) {
-			RunEnvironment.getInstance().endAt(20);
-		}
-//		try {
-//			TransmissionModel trans = TransmissionModel.create();
-//			trans.loadModel();
-//			trans.getResFromJep();
-//	} catch (JepException e) {
-//		// TODO Auto-generated catch block
-//		e.printStackTrace();
-//	}
+  // build a context for every agents and agentstype.
+  @Override
+  public Context build(Context<Object> context) {
+    context.setId("jzombies"); // ID should be project name.
+    this.dbs = Database.create();
+    // build a infection network, used in infect() from zombie class.
+    NetworkBuilder<Object> netBuilder =
+        new NetworkBuilder<Object>("infection network", context, true);
+    netBuilder.buildNetwork();
 
 
-		return context;
+    // use factory method,avoid using constrcutor.
+    ContinuousSpaceFactory spaceFactory =
+        ContinuousSpaceFactoryFinder.createContinuousSpaceFactory(null);
+    // use factory to create instance, create continuousSpace named space,every object added in
+    // here.
+    // name;context;adder with random location; border of grid;dimension.
+    ContinuousSpace<Object> space =
+        spaceFactory.createContinuousSpace("space", context, new RandomCartesianAdder<Object>(),
+            new repast.simphony.space.continuous.WrapAroundBorders(), 10, 10);
 
-	}
+
+    GridFactory gridFactory = GridFactoryFinder.createGridFactory(null);
+    // true means two object in the same grid.
+    // SimpleGridAdder: not give location,but via build().
+    Grid<Object> grid = gridFactory.createGrid("grid", context, new GridBuilderParameters<Object>(
+        new WrapAroundBorders(), new SimpleGridAdder<Object>(), true, 10, 10)); // IF FALSE null
+                                                                                // pointer inital
+
+    // create agents.
+    Parameters params = RunEnvironment.getInstance().getParameters();
+    int zombieCount = (Integer) params.getValue("zombie_count");
+    for (int i = 0; i < zombieCount; i++) {
+      String zName = RandomStringUtils.random(8, true, true);
+      dbs.addPerson(zName);
+      dbs.addIsIll(zName);
+
+      context.add(new Zombie(space, grid, zName, dbs));
+      System.out.println("ini zombie "+zName);
+    }
+
+    int humanCount = (Integer) params.getValue("human_count");
+    for (int i = 0; i < humanCount; i++) {
+      int energy = RandomHelper.nextIntFromTo(4, 10);
+      String hName = RandomStringUtils.random(8, true, true);
+
+      dbs.addPerson(hName);
+      context.add(new Human(space, grid, hName, energy, dbs));
+    }
+
+    // move agent to grid location that corresponds to continouspace location
+    for (Object obj : context.getObjects(Object.class)) {
+      NdPoint pt = space.getLocation(obj);
+      grid.moveTo(obj, (int) pt.getX(), (int) pt.getY());
+      try {
+        String name = (String) FieldUtils.readField(obj, "name", true);
+        dbs.addPoint(name, (int) pt.getX(), (int) pt.getY());
+      } catch (IllegalAccessException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    }
+
+    if (RunEnvironment.getInstance().isBatch()) {
+      RunEnvironment.getInstance().endAt(20);
+    }
+
+    return context;
+
+  }
 }

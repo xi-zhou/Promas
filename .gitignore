@@ -1,2 +1,14 @@
 /.settings
 output/
+
+.DS_Store
+
+src/jzombies/test.java
+
+debug.log
+
+velocity.log
+
+velocity.log.1
+
+bin/
