@@ -15,13 +15,13 @@ import jep.SubInterpreter;
 import repast.simphony.engine.schedule.ScheduledMethod;
 
 
-public class TransmissionModel {
+public final class TransmissionModel {
   private static ArrayList<String> infectedPerson = new ArrayList<String>();
   static String res;
   static SharedInterpreter interp;
 
 
-  TransmissionModel() {}
+  private TransmissionModel() {}
 
   static TransmissionModel create() throws JepException {
     return new TransmissionModel();
@@ -29,7 +29,7 @@ public class TransmissionModel {
   }
   
   @ScheduledMethod(start = 0.5, interval = 1)
-  public static synchronized void loadModel() throws JepException {
+  public static void loadModel() throws JepException {
     long startTime = System.currentTimeMillis();
     System.out.println("load model...");
     interp = new SharedInterpreter();

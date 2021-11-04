@@ -1,4 +1,3 @@
-
 package jzombies;
 
 import java.util.List;
@@ -22,15 +21,14 @@ public class Human {
   private Grid<Object> grid;
   private int energy, startingEnergy;
   final private String name;
-  final private Database dbs;
 
-  public Human(ContinuousSpace<Object> space, Grid<Object> grid, String hName, int energy,
-      Database dbs) {
+
+  public Human(ContinuousSpace<Object> space, Grid<Object> grid, String hName, int energy) {
     this.space = space;
     this.grid = grid;
     this.name = hName;
     this.energy = startingEnergy = energy;
-    this.dbs = dbs;
+
   }
 
 
@@ -69,7 +67,7 @@ public class Human {
       space.moveByVector(this, 2, angle, 0);
       myPoint = space.getLocation(this);
       grid.moveTo(this, (int) myPoint.getX(), (int) myPoint.getY());
-      dbs.updatePoint(name, (int) myPoint.getX(), (int) myPoint.getY());
+      Database.updatePoint(name, (int) myPoint.getX(), (int) myPoint.getY());
       energy--;
     }
   }

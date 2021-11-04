@@ -28,21 +28,13 @@ public class Zombie {
   private Grid<Object> grid; // query neigbhour
   private boolean moved;
   final private String name;
-  final private Database dbs;
-  // private TransmissionModel trans;
 
-  public Zombie(ContinuousSpace<Object> space, Grid<Object> grid, String zName, Database dbs) {
+
+  public Zombie(ContinuousSpace<Object> space, Grid<Object> grid, String zName) {
     this.space = space;
     this.grid = grid;
     this.name = zName;
-    this.dbs = dbs;
 
-    // try {
-    // trans = TransmissionModel.create();
-    // } catch (JepException e) {
-    // // TODO Auto-generated catch block
-    // e.printStackTrace();
-    // }
   }
 
   // call this method on every iteration of simulation
@@ -59,8 +51,9 @@ public class Zombie {
 
     GridPoint pointWithMostHumans =
         gridCells.get(RandomHelper.nextIntFromTo(0, gridCells.size() - 1)).getPoint();
-    moveTowards(pointWithMostHumans);
     infect();
+    moveTowards(pointWithMostHumans);
+
   }
 
   /**
@@ -77,7 +70,7 @@ public class Zombie {
       space.moveByVector(this, 1, angle, 0);
       myPoint = space.getLocation(this);
       grid.moveTo(this, (int) myPoint.getX(), (int) myPoint.getY());
-      dbs.updatePoint(name, (int) myPoint.getX(), (int) myPoint.getY());
+      Database.updatePoint(name, (int) myPoint.getX(), (int) myPoint.getY());
       moved = true;
     }
   }
@@ -97,8 +90,7 @@ public class Zombie {
 
 
     modelAllInfection = TransmissionModel.getInfectedPerson();
-
-    newInfection = dbs.findNewInfected(modelAllInfection);
+    newInfection = Database.getNewInfection();
 
     System.out.println(name + " new infection list" + newInfection);
 
@@ -116,15 +108,16 @@ public class Zombie {
         } catch (IllegalAccessException e) {
           e.printStackTrace();
         }
-        // System.out.println("human name" + hName);
         if (newInfection.contains(hName)) {
-          dbs.addIsIll(hName);
+          Database.addIsIll(hName);
+
           System.out.println("Infecting" + hName);
+          Database.removeFromList(hName);
           NdPoint spacePt = space.getLocation(obj);
           Context<Object> context = ContextUtils.getContext(obj);
           context.remove(obj);
 
-          Zombie zombie = new Zombie(space, grid, hName, dbs);
+          Zombie zombie = new Zombie(space, grid, hName);
           context.add(zombie);
           space.moveTo(zombie, spacePt.getX(), spacePt.getY());
           grid.moveTo(zombie, pt.getX(), pt.getY());

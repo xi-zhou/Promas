@@ -11,16 +11,20 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import repast.simphony.engine.schedule.ScheduledMethod;
 
-public class Database {
-  // static String tt = RandomStringUtils.random(8, true, false);
+public final class Database {
+  // static // static String tt = RandomStringUtils.random(8, true, false);
   // String url = "jdbc:sqlite:/Users/z.x/testDB/"+tt+".db";
-  String url = "jdbc:sqlite:/Users/z.x/test.db";
+  static String url = "jdbc:sqlite:/Users/z.x/test.db";
+  static ArrayList<String> newInfection;
+  static ArrayList<String> oldInfection;
+  static ArrayList<String> allInfection;
 
   /**
    * Create empty database with three empty table:person,point,isIll.Corresponding problog term.
    */
-  public Database() {
+  private Database() {
     String person = "CREATE TABLE \"person\" (\n" + "	\"name\"	TEXT UNIQUE,\n"
         + "	PRIMARY KEY(\"name\")\n" + ");";
 
@@ -55,11 +59,11 @@ public class Database {
 
   }
 
-  private Connection connect() {
+  private static Connection connect() {
     // SQLite connection string
     Connection connection = null;
     try {
-      connection = DriverManager.getConnection(this.url);
+      connection = DriverManager.getConnection(url);
     } catch (SQLException e) {
       System.out.println(e.getMessage());
     }
@@ -68,9 +72,9 @@ public class Database {
 
 
 
-  public void addIsIll(String zName) {
+  public static void addIsIll(String zName) {
     String illPerson = "INSERT INTO is_ill(name) VALUES(?)";
-    try (Connection connection = this.connect();
+    try (Connection connection = connect();
         PreparedStatement addPerson = connection.prepareStatement(illPerson);) {
       addPerson.setString(1, zName);
       addPerson.executeUpdate();
@@ -80,9 +84,9 @@ public class Database {
 
   }
 
-  public void addPerson(String hName) {
+  public static void addPerson(String hName) {
     String healthyPerson = "INSERT INTO person(name) VALUES(?);";
-    try (Connection connection = this.connect();
+    try (Connection connection = connect();
         PreparedStatement addPerson = connection.prepareStatement(healthyPerson);) {
       addPerson.setString(1, hName);
       addPerson.executeUpdate();
@@ -92,9 +96,9 @@ public class Database {
 
   }
 
-  public void addPoint(String name, int d, int f) {
+  public static void addPoint(String name, int d, int f) {
     String point = "INSERT INTO point(name,x,y) VALUES(?,?,?)";
-    try (Connection connection = this.connect();
+    try (Connection connection = connect();
         PreparedStatement addPoint = connection.prepareStatement(point);) {
       addPoint.setString(1, name);
       addPoint.setInt(2, d);
@@ -114,9 +118,9 @@ public class Database {
    * @param x position
    * @param y position
    */
-  public void updatePoint(String name, int x, int y) {
+  public static void updatePoint(String name, int x, int y) {
     String point = "UPDATE point SET x=?,y=? WHERE name=?";
-    try (Connection connection = this.connect();
+    try (Connection connection = connect();
         PreparedStatement updatePoint = connection.prepareStatement(point);) {
       updatePoint.setInt(1, x);
       updatePoint.setInt(2, y);
@@ -136,27 +140,37 @@ public class Database {
    * @param allInfection list contains current all infected person
    * @return list newly infected person in this iteration
    */
-  public ArrayList<String> findNewInfected(ArrayList<String> allInfection) {
-    // ArrayList<String> newInfection = new ArrayList<String>();
-    ArrayList<String> oldInfection = new ArrayList<String>();
+  @ScheduledMethod(start = 0.8, interval = 1)
+  public static void findNewInfected() {
+
+    oldInfection = new ArrayList<String>();
+    allInfection = new ArrayList<String>();
+    allInfection = TransmissionModel.getInfectedPerson();
     String findIll = "SELECT * from is_ill";
 
-    try (Connection connection = this.connect();
+    try (Connection connection = connect();
         PreparedStatement checkIllExist = connection.prepareStatement(findIll);) {
       ResultSet rs = checkIllExist.executeQuery();
 
       while (rs.next()) {
         oldInfection.add(rs.getString("name"));
       }
-
     } catch (SQLException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
+    newInfection = (ArrayList<String>) allInfection.clone();
+    newInfection.removeAll(oldInfection);
 
-    allInfection.removeAll(oldInfection);
-    return allInfection;
 
+  }
+
+  public static ArrayList<String> getNewInfection() {
+    return newInfection;
+  }
+
+
+  public static void removeFromList(String hName) {
+    newInfection.remove(hName);
   }
 
 
