@@ -70,7 +70,7 @@ public class Zombie {
       space.moveByVector(this, 1, angle, 0);
       myPoint = space.getLocation(this);
       grid.moveTo(this, (int) myPoint.getX(), (int) myPoint.getY());
-      Database.updatePoint(name, (int) myPoint.getX(), (int) myPoint.getY());
+      Database.updatePoint(name,myPoint.getX(), myPoint.getY());
       moved = true;
     }
   }

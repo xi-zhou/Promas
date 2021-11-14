@@ -96,13 +96,13 @@ public final class Database {
 
   }
 
-  public static void addPoint(String name, int d, int f) {
+  public static void addPoint(String name, double d, double f) {
     String point = "INSERT INTO point(name,x,y) VALUES(?,?,?)";
     try (Connection connection = connect();
         PreparedStatement addPoint = connection.prepareStatement(point);) {
       addPoint.setString(1, name);
-      addPoint.setInt(2, d);
-      addPoint.setInt(3, f);
+      addPoint.setDouble(2, d);
+      addPoint.setDouble(3, f);
       addPoint.executeUpdate();
     } catch (SQLException e) {
       System.out.println(e.getMessage());
@@ -115,15 +115,15 @@ public final class Database {
    * Update dbs when person moved.
    * 
    * @param name person's name
-   * @param x position
-   * @param y position
+   * @param f position
+   * @param g position
    */
-  public static void updatePoint(String name, int x, int y) {
+  public static void updatePoint(String name, double f, double g) {
     String point = "UPDATE point SET x=?,y=? WHERE name=?";
     try (Connection connection = connect();
         PreparedStatement updatePoint = connection.prepareStatement(point);) {
-      updatePoint.setInt(1, x);
-      updatePoint.setInt(2, y);
+      updatePoint.setDouble(1, f);
+      updatePoint.setDouble(2, g);
       updatePoint.setString(3, name);
       updatePoint.executeUpdate();
     } catch (SQLException e) {

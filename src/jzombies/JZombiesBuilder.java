@@ -86,7 +86,7 @@ public class JZombiesBuilder implements ContextBuilder<Object> {
       grid.moveTo(obj, (int) pt.getX(), (int) pt.getY());
       try {
         String name = (String) FieldUtils.readField(obj, "name", true);
-        Database.addPoint(name, (int) pt.getX(), (int) pt.getY());
+        Database.addPoint(name,pt.getX(),pt.getY());
       } catch (IllegalAccessException e) {
         // TODO Auto-generated catch block
         e.printStackTrace();

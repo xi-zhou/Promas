@@ -44,7 +44,7 @@ public final class TransmissionModel {
         + ":- sqlite_load('/Users/z.x/test.db').\n"
         + "P :: infects(PERSONx,PERSONy) :- point(PERSONx, X, Y),\n"
         + "point(PERSONy, A, B), PERSONx\\\\=PERSONy,\n"
-        + "D is sqrt((A-X)^2 + (B-Y)^2),D <10 , D>0,P is 0.1/(D^2).\n" + "\n"
+        + "D is sqrt((A-X)^2 + (B-Y)^2),D <10 , D>0,P is min(1,0.1/(D^2)).\n" + "\n"
         + "infects(PERSONx,PERSONy) :- point(PERSONx, X, Y),\n" + "point(PERSONy, X, Y).\n"
         + "ill(PERSONx):-infects(PERSONx,PERSONy), is_ill(PERSONy).\n"
         + "ill(PERSONx):-is_ill(PERSONx).\n" + "query(ill(PERSONx)).\n" + "\n" + "\"\"\"");
@@ -66,7 +66,7 @@ public final class TransmissionModel {
     for (Entry<String, Float> entry : myMap.entrySet()) {
       if (entry.getValue() >= 0.05) { 
         String name[] = entry.getKey().split("'");
-        // System.out.println(entry.getKey()+" : "+entry.getValue());
+        //System.out.println(entry.getKey()+" : "+entry.getValue());
         infectedPerson.add(name[1]);
       }
     }
