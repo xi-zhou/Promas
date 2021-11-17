@@ -5,7 +5,9 @@
   <format>TABULAR</format>
   <sourceIds class="linked-hash-set">
     <string>tick</string>
-    <string>Human Count</string>
+    <string>social Human Count</string>
+    <string>resistance Human Count</string>
+    <string>cautious Human Count</string>
     <string>Zombie Count</string>
   </sourceIds>
   <fileName>output/ModelOutput.txt</fileName>

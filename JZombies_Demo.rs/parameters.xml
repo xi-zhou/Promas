@@ -6,18 +6,28 @@
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 									
 		/>
-				<parameter name="human_count" displayName="Human Count" type="int" 
-						defaultValue="50" 
+				<parameter name="cautious_human_count" displayName="Cautious Human Count" type="int" 
+						defaultValue="20" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 									
-		/>
-			
+		/>		
+				<parameter name="social_human_count" displayName="Social Human Count" type="int" 
+						defaultValue="15" 
+						isReadOnly="false" 
+						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
+									
+		/>					
 				<parameter name="zombie_count" displayName="Zombie Count" type="int" 
 						defaultValue="25" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 									
+		/>
+				<parameter name="resistance_human_count" displayName="Resistance Human Count" type="int" 
+						defaultValue="15" 
+						isReadOnly="false" 
+						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"		
 		/>
 		</parameters>
 

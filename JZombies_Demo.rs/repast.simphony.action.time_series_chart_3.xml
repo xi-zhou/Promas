@@ -21,6 +21,42 @@
   <showLegend>true</showLegend>
   <seriesIds>
     <entry>
+      <string>resistance Human Count</string>
+      <SeriesData>
+        <label>resistance Human Count</label>
+        <color>
+          <red>0</red>
+          <green>0</green>
+          <blue>255</blue>
+          <alpha>255</alpha>
+        </color>
+      </SeriesData>
+    </entry>
+    <entry>
+      <string>cautious Human Count</string>
+      <SeriesData>
+        <label>cautious Human Count</label>
+        <color>
+          <red>0</red>
+          <green>0</green>
+          <blue>255</blue>
+          <alpha>255</alpha>
+        </color>
+      </SeriesData>
+    </entry>
+        
+    <entry>
+      <string>social Human Count</string>
+      <SeriesData>
+        <label>social Human Count</label>
+        <color>
+          <red>0</red>
+          <green>0</green>
+          <blue>255</blue>
+          <alpha>255</alpha>
+        </color>
+      </SeriesData>
+    </entry><entry>
       <string>Zombie Count</string>
       <SeriesData>
         <label>Zombie Count</label>
@@ -28,18 +64,6 @@
           <red>255</red>
           <green>0</green>
           <blue>0</blue>
-          <alpha>255</alpha>
-        </color>
-      </SeriesData>
-    </entry>
-    <entry>
-      <string>Human Count</string>
-      <SeriesData>
-        <label>Human Count</label>
-        <color>
-          <red>0</red>
-          <green>0</green>
-          <blue>255</blue>
           <alpha>255</alpha>
         </color>
       </SeriesData>

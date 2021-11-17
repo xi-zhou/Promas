@@ -1,11 +1,13 @@
 package jzombies;
 
 import java.lang.reflect.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
-
 import jep.JepException;
 import repast.simphony.context.Context;
 import repast.simphony.context.DefaultContext;
@@ -30,12 +32,13 @@ import repast.simphony.space.grid.WrapAroundBorders;
 // initialize the simulation
 public class JZombiesBuilder implements ContextBuilder<Object> {
   // Database dbs;
-
+  private static Map<Integer, List<Human>> group =new HashMap<Integer, List<Human>>();
   // build a context for every agents and agentstype.
   @Override
   public Context build(Context<Object> context) {
     context.setId("jzombies"); // ID should be project name.
     Database.create();
+    SocietyModel.create();
     // build a infection network, used in infect() from zombie class.
     NetworkBuilder<Object> netBuilder =
         new NetworkBuilder<Object>("infection network", context, true);
@@ -71,13 +74,39 @@ public class JZombiesBuilder implements ContextBuilder<Object> {
       context.add(new Zombie(space, grid, zName));
     }
 
-    int humanCount = (Integer) params.getValue("human_count");
-    for (int i = 0; i < humanCount; i++) {
-      int energy = RandomHelper.nextIntFromTo(4, 10);
+    int socialHumanCount = (Integer) params.getValue("social_human_count");
+    int cautiousHumanCount = (Integer) params.getValue("cautious_human_count");
+    int resistanceHumanCount = (Integer) params.getValue("resistance_human_count");
+    
+    for (int i = 0; i < resistanceHumanCount; i++) {
       String hName = RandomStringUtils.random(8, true, true);
 
       Database.addPerson(hName);
-      context.add(new Human(space, grid, hName, energy));
+      ResistanceHuman resistanceHuman= new ResistanceHuman (space, grid, hName);
+      //SocietyModel.addSocialHuman(resistanceHuman);
+      context.add(resistanceHuman);
+    }
+    //Human human=null;
+    for (int i = 0; i < socialHumanCount; i++) {
+      String hName = RandomStringUtils.random(8, true, true);
+
+      Database.addPerson(hName);
+      SocialHuman socialHuman= new SocialHuman(space, grid, hName);
+      SocietyModel.addSocialHuman(socialHuman);
+      context.add(socialHuman);
+    }
+    
+    group=SocietyModel.group();
+    //SocietyModel.organizeParty(group);
+    SocietyModel.findPartyLocation(space, socialHuman);
+    
+    for (int i = 0; i < cautiousHumanCount; i++) {
+      String hName = RandomStringUtils.random(8, true, true);
+
+      Database.addPerson(hName);
+      CautiousHuman cautiousHuman = new CautiousHuman(space, grid, hName);
+      SocietyModel.addCautiousHuman(cautiousHuman);
+      context.add(cautiousHuman);
     }
 
     // move agent to grid location that corresponds to continouspace location

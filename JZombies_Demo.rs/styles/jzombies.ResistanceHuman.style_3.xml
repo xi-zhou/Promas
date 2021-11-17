@@ -1,5 +1,5 @@
 <repast.simphony.visualization.editedStyle.DefaultEditedStyleData2D>
-  <shapeWkt>square</shapeWkt>
+  <shapeWkt>circle</shapeWkt>
   <size>30.0</size>
   <sizeMax>15.0</sizeMax>
   <sizeMin>1.0</sizeMin>
@@ -36,5 +36,5 @@
     <float>1.0</float>
     <float>1.0</float>
   </colorScale>
-  <iconFile2D>icons/zombie.png</iconFile2D>
+  <iconFile2D>icons/person.png</iconFile2D>
 </repast.simphony.visualization.editedStyle.DefaultEditedStyleData2D>

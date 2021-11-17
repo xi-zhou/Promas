@@ -7,9 +7,17 @@
       <string>repast.simphony.visualization.editedStyle.EditedStyle2D</string>
     </entry>
     <entry>
-      <string>jzombies.Human</string>
+      <string>jzombies.SocialHuman</string>
       <string>repast.simphony.visualization.editedStyle.EditedStyle2D</string>
     </entry>
+    <entry>
+      <string>jzombies.CautiousHuman</string>
+      <string>repast.simphony.visualization.editedStyle.EditedStyle2D</string>
+    </entry>
+    <entry>
+      <string>jzombies.ResistanceHuman</string>
+      <string>repast.simphony.visualization.editedStyle.EditedStyle2D</string>
+    </entry>        
   </styles>
   <editedStyles>
     <entry>
@@ -17,9 +25,17 @@
       <string>jzombies.Zombie.style_0.xml</string>
     </entry>
     <entry>
-      <string>jzombies.Human</string>
-      <string>jzombies.Human.style_0.xml</string>
+      <string>jzombies.SocialHuman</string>
+      <string>jzombies.SocialHuman.style_0.xml</string>
     </entry>
+    <entry>
+      <string>jzombies.CautiousHuman</string>
+      <string>jzombies.CautiousHuman.style_0.xml</string>
+    </entry>
+    <entry>
+      <string>jzombies.ResistanceHuman</string>
+      <string>jzombies.ResistanceHuman.style_0.xml</string>
+    </entry>         
   </editedStyles>
   <netStyles/>
   <editedNetStyles/>
@@ -39,12 +55,20 @@
   <layerOrder>
     <entry>
       <string>jzombies.Zombie</string>
+      <int>0</int>
+    </entry>
+    <entry>
+      <string>jzombies.ResistanceHuman</string>
+      <int>3</int>
+    </entry>
+    <entry>
+      <string>jzombies.SocialHuman</string>
       <int>1</int>
     </entry>
     <entry>
-      <string>jzombies.Human</string>
-      <int>0</int>
-    </entry>
+      <string>jzombies.CautiousHuman</string>
+      <int>2</int>
+    </entry>     
   </layerOrder>
   <projections>
     <repast.simphony.scenario.data.ProjectionData>

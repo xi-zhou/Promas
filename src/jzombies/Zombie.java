@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
-
 import jep.JepException;
 import repast.simphony.context.Context;
 import repast.simphony.engine.schedule.ScheduledMethod;
@@ -22,58 +21,43 @@ import repast.simphony.util.ContextUtils;
 import repast.simphony.util.SimUtilities;
 
 
-public class Zombie {
+public class Zombie extends Human{
 
-  private ContinuousSpace<Object> space; // n-dim coordonate
-  private Grid<Object> grid; // query neigbhour
-  private boolean moved;
-  final private String name;
-
-
-  public Zombie(ContinuousSpace<Object> space, Grid<Object> grid, String zName) {
-    this.space = space;
-    this.grid = grid;
-    this.name = zName;
-
+  public Zombie(ContinuousSpace<Object> space, Grid<Object> grid, String hName) {
+    super(space,grid,hName);
   }
+  
 
-  // call this method on every iteration of simulation
   @ScheduledMethod(start = 1, interval = 1)
-  public void step() {
-    // get the grid location of this Zombie
+  public void run() {
+    // get the grid location of this Human
     GridPoint pt = grid.getLocation(this);
-
     // use the GridCellNgh class to create GridCells for
     // the surrounding neighborhood.
-    GridCellNgh<Human> nghCreator = new GridCellNgh<Human>(grid, pt, Human.class, 4, 4);
-    List<GridCell<Human>> gridCells = nghCreator.getNeighborhood(true);
-    SimUtilities.shuffle(gridCells, RandomHelper.getUniform());
 
-    GridPoint pointWithMostHumans =
-        gridCells.get(RandomHelper.nextIntFromTo(0, gridCells.size() - 1)).getPoint();
     infect();
-    moveTowards(pointWithMostHumans);
-
+    GridPoint location =super.findLocation(grid,pt);
+    super.moveTowards(location);
   }
-
-  /**
-   * Move to a random point in Moore Neighborhood and update position in dbs
-   * 
-   * @param pt a random point
-   */
-  public void moveTowards(GridPoint pt) {
-    // only move if we are not already in this grid location
-    if (!pt.equals(grid.getLocation(this))) {
-      NdPoint myPoint = space.getLocation(this);
-      NdPoint otherPoint = new NdPoint(pt.getX(), pt.getY());
-      double angle = SpatialMath.calcAngleFor2DMovement(space, myPoint, otherPoint);
-      space.moveByVector(this, 1, angle, 0);
-      myPoint = space.getLocation(this);
-      grid.moveTo(this, (int) myPoint.getX(), (int) myPoint.getY());
-      Database.updatePoint(name,myPoint.getX(), myPoint.getY());
-      moved = true;
-    }
-  }
+  // call this method on every iteration of simulation
+//  @ScheduledMethod(start = 1, interval = 1)
+//  public void step() {
+//    // get the grid location of this Zombie
+//    GridPoint pt = grid.getLocation(this);
+//
+//    // use the GridCellNgh class to create GridCells for
+//    // the surrounding neighborhood.
+//    GridCellNgh<Human> nghCreator = new GridCellNgh<Human>(grid, pt, Human.class, 4, 4);
+//    List<GridCell<Human>> gridCells = nghCreator.getNeighborhood(true);
+//    SimUtilities.shuffle(gridCells, RandomHelper.getUniform());
+//
+//    GridPoint pointWithMostHumans =
+//        gridCells.get(RandomHelper.nextIntFromTo(0, gridCells.size() - 1)).getPoint();
+//    
+//    moveTowards(pointWithMostHumans);
+//
+//  }
+  
 
   public void infect() {
     ArrayList<String> modelAllInfection = new ArrayList<String>();
@@ -92,7 +76,7 @@ public class Zombie {
     modelAllInfection = TransmissionModel.getInfectedPerson();
     newInfection = Database.getNewInfection();
 
-    System.out.println(name + " new infection list" + newInfection);
+    System.out.println(this.name + " new infection list" + newInfection);
 
 
     // for each zombie check if there are humans in its moore neighborhood, if yes than for each

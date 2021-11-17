@@ -17,41 +17,65 @@ import repast.simphony.util.SimUtilities;
 
 public class Human {
 
-  private ContinuousSpace<Object> space;
-  private Grid<Object> grid;
-  private int energy, startingEnergy;
-  final private String name;
+  protected ContinuousSpace<Object> space;
+  protected Grid<Object> grid;
+ protected String name;
 
 
-  public Human(ContinuousSpace<Object> space, Grid<Object> grid, String hName, int energy) {
+  public Human(ContinuousSpace<Object> space, Grid<Object> grid, String hName) {
     this.space = space;
     this.grid = grid;
     this.name = hName;
-    this.energy = startingEnergy = energy;
-
   }
 
 
-  @ScheduledMethod(start = 1, interval = 1)
-  public void run() {
-    // get the grid location of this Human
-    GridPoint pt = grid.getLocation(this);
-    // use the GridCellNgh class to create GridCells for
-    // the surrounding neighborhood.
-    GridCellNgh<Zombie> nghCreator = new GridCellNgh<Zombie>(grid, pt, Zombie.class, 1, 1);
-    List<GridCell<Zombie>> gridCells = nghCreator.getNeighborhood(true);
+
+//    GridPoint pointWithLeastZombies =
+//        gridCells.get(RandomHelper.nextIntFromTo(0, gridCells.size() - 1)).getPoint();
+    
+//    if(isSocial) {
+//
+//     // GridPoint partyLocation= SocietyModel.findPartyLocation(space, this);
+
+//      //moveTowards(partyLocation);
+//      moveTowards(SocietyModel.getPartyLocation());
+//    }else {
+//      
+//      GridPoint pointWithLeastZombies = null;
+//      int minCount = Integer.MAX_VALUE;
+//      for (GridCell<Zombie> cell : gridCells) {
+//          if (cell.size() < minCount) {
+//              pointWithLeastZombies = cell.getPoint();
+//              minCount = cell.size();
+//          }
+//      }
+//
+//      moveTowards(pointWithLeastZombies);
+//    }
+    
+  
+
+
+
+  public GridPoint findLocation(Grid<Object> grid, GridPoint pt) {
+    GridCellNgh<Human> nghCreator = new GridCellNgh<Human>(grid, pt, Human.class, 1, 1);
+    List<GridCell<Human>> gridCells = nghCreator.getNeighborhood(true);
     SimUtilities.shuffle(gridCells, RandomHelper.getUniform());
-
-
-    GridPoint pointWithLeastZombies =
+    GridPoint randomPos =
         gridCells.get(RandomHelper.nextIntFromTo(0, gridCells.size() - 1)).getPoint();
-
-    if (energy > 0) {
-      moveTowards(pointWithLeastZombies);
-    } else {
-      energy = startingEnergy;
-    }
+  return randomPos;
   }
+
+
+  public ContinuousSpace<Object> getSpace() {
+    return space;
+  }
+
+
+  public Grid<Object> getGrid() {
+    return grid;
+  }
+
 
   /**
    * Move to a random point in Moore Neighborhood and update position in dbs
@@ -68,7 +92,6 @@ public class Human {
       myPoint = space.getLocation(this);
       grid.moveTo(this, (int) myPoint.getX(), (int) myPoint.getY());
       Database.updatePoint(name,myPoint.getX(), myPoint.getY());
-      energy--;
     }
   }
 
