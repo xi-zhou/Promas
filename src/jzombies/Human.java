@@ -19,7 +19,7 @@ public class Human {
 
   protected ContinuousSpace<Object> space;
   protected Grid<Object> grid;
- protected String name;
+  protected String name;
 
 
   public Human(ContinuousSpace<Object> space, Grid<Object> grid, String hName) {
@@ -28,42 +28,13 @@ public class Human {
     this.name = hName;
   }
 
-
-
-//    GridPoint pointWithLeastZombies =
-//        gridCells.get(RandomHelper.nextIntFromTo(0, gridCells.size() - 1)).getPoint();
-    
-//    if(isSocial) {
-//
-//     // GridPoint partyLocation= SocietyModel.findPartyLocation(space, this);
-
-//      //moveTowards(partyLocation);
-//      moveTowards(SocietyModel.getPartyLocation());
-//    }else {
-//      
-//      GridPoint pointWithLeastZombies = null;
-//      int minCount = Integer.MAX_VALUE;
-//      for (GridCell<Zombie> cell : gridCells) {
-//          if (cell.size() < minCount) {
-//              pointWithLeastZombies = cell.getPoint();
-//              minCount = cell.size();
-//          }
-//      }
-//
-//      moveTowards(pointWithLeastZombies);
-//    }
-    
-  
-
-
-
   public GridPoint findLocation(Grid<Object> grid, GridPoint pt) {
     GridCellNgh<Human> nghCreator = new GridCellNgh<Human>(grid, pt, Human.class, 1, 1);
     List<GridCell<Human>> gridCells = nghCreator.getNeighborhood(true);
     SimUtilities.shuffle(gridCells, RandomHelper.getUniform());
     GridPoint randomPos =
         gridCells.get(RandomHelper.nextIntFromTo(0, gridCells.size() - 1)).getPoint();
-  return randomPos;
+    return randomPos;
   }
 
 
@@ -91,7 +62,7 @@ public class Human {
       space.moveByVector(this, 2, angle, 0);
       myPoint = space.getLocation(this);
       grid.moveTo(this, (int) myPoint.getX(), (int) myPoint.getY());
-      Database.updatePoint(name,myPoint.getX(), myPoint.getY());
+      Database.updatePoint(name, myPoint.getX(), myPoint.getY());
     }
   }
 

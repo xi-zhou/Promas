@@ -21,43 +21,20 @@ import repast.simphony.util.ContextUtils;
 import repast.simphony.util.SimUtilities;
 
 
-public class Zombie extends Human{
+public class Zombie extends Human {
 
   public Zombie(ContinuousSpace<Object> space, Grid<Object> grid, String hName) {
-    super(space,grid,hName);
+    super(space, grid, hName);
   }
-  
+
 
   @ScheduledMethod(start = 1, interval = 1)
   public void run() {
-    // get the grid location of this Human
     GridPoint pt = grid.getLocation(this);
-    // use the GridCellNgh class to create GridCells for
-    // the surrounding neighborhood.
-
     infect();
-    GridPoint location =super.findLocation(grid,pt);
+    GridPoint location = super.findLocation(grid, pt);
     super.moveTowards(location);
   }
-  // call this method on every iteration of simulation
-//  @ScheduledMethod(start = 1, interval = 1)
-//  public void step() {
-//    // get the grid location of this Zombie
-//    GridPoint pt = grid.getLocation(this);
-//
-//    // use the GridCellNgh class to create GridCells for
-//    // the surrounding neighborhood.
-//    GridCellNgh<Human> nghCreator = new GridCellNgh<Human>(grid, pt, Human.class, 4, 4);
-//    List<GridCell<Human>> gridCells = nghCreator.getNeighborhood(true);
-//    SimUtilities.shuffle(gridCells, RandomHelper.getUniform());
-//
-//    GridPoint pointWithMostHumans =
-//        gridCells.get(RandomHelper.nextIntFromTo(0, gridCells.size() - 1)).getPoint();
-//    
-//    moveTowards(pointWithMostHumans);
-//
-//  }
-  
 
   public void infect() {
     ArrayList<String> modelAllInfection = new ArrayList<String>();
@@ -67,7 +44,7 @@ public class Zombie extends Human{
     List<Object> humans = new ArrayList<Object>();
     // get all humans at zombies'grid
     for (Object obj : grid.getObjectsAt(pt.getX(), pt.getY())) {
-      if (obj instanceof Human) {
+      if (obj instanceof SocialHuman || obj instanceof CautiousHuman) {
         humans.add(obj);
       }
     }
@@ -92,7 +69,7 @@ public class Zombie extends Human{
         } catch (IllegalAccessException e) {
           e.printStackTrace();
         }
-        if (newInfection.contains(hName)) {
+        if (newInfection.contains(hName) ) {
           Database.addIsIll(hName);
 
           System.out.println("Infecting" + hName);
@@ -113,7 +90,7 @@ public class Zombie extends Human{
       }
     } else {
       System.out
-          .println(name + " infection detected but not in this ngh,this ngh contains no human");
+          .println(name + " infection detected but not in this ngh,this ngh contains no human, or resistance eist");
     }
 
   }

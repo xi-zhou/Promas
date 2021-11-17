@@ -32,7 +32,8 @@ import repast.simphony.space.grid.WrapAroundBorders;
 // initialize the simulation
 public class JZombiesBuilder implements ContextBuilder<Object> {
   // Database dbs;
-  private static Map<Integer, List<Human>> group =new HashMap<Integer, List<Human>>();
+  private static Map<Integer, List<SocialHuman>> group = new HashMap<Integer, List<SocialHuman>>();
+
   // build a context for every agents and agentstype.
   @Override
   public Context build(Context<Object> context) {
@@ -77,29 +78,28 @@ public class JZombiesBuilder implements ContextBuilder<Object> {
     int socialHumanCount = (Integer) params.getValue("social_human_count");
     int cautiousHumanCount = (Integer) params.getValue("cautious_human_count");
     int resistanceHumanCount = (Integer) params.getValue("resistance_human_count");
-    
+
     for (int i = 0; i < resistanceHumanCount; i++) {
       String hName = RandomStringUtils.random(8, true, true);
 
       Database.addPerson(hName);
-      ResistanceHuman resistanceHuman= new ResistanceHuman (space, grid, hName);
-      //SocietyModel.addSocialHuman(resistanceHuman);
+      ResistanceHuman resistanceHuman = new ResistanceHuman(space, grid, hName);
+      // SocietyModel.addSocialHuman(resistanceHuman);
       context.add(resistanceHuman);
     }
-    //Human human=null;
+    // Human human=null;
     for (int i = 0; i < socialHumanCount; i++) {
       String hName = RandomStringUtils.random(8, true, true);
 
       Database.addPerson(hName);
-      SocialHuman socialHuman= new SocialHuman(space, grid, hName);
+      SocialHuman socialHuman = new SocialHuman(space, grid, hName);
       SocietyModel.addSocialHuman(socialHuman);
       context.add(socialHuman);
     }
-    
-    group=SocietyModel.group();
-    //SocietyModel.organizeParty(group);
-    SocietyModel.findPartyLocation(space, socialHuman);
-    
+
+    group = SocietyModel.group();
+    SocietyModel.organizeParty(space, group);
+
     for (int i = 0; i < cautiousHumanCount; i++) {
       String hName = RandomStringUtils.random(8, true, true);
 
@@ -115,7 +115,7 @@ public class JZombiesBuilder implements ContextBuilder<Object> {
       grid.moveTo(obj, (int) pt.getX(), (int) pt.getY());
       try {
         String name = (String) FieldUtils.readField(obj, "name", true);
-        Database.addPoint(name,pt.getX(),pt.getY());
+        Database.addPoint(name, pt.getX(), pt.getY());
       } catch (IllegalAccessException e) {
         // TODO Auto-generated catch block
         e.printStackTrace();

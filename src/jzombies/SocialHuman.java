@@ -10,10 +10,10 @@ import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridPoint;
 import repast.simphony.util.SimUtilities;
 
-public class SocialHuman extends Human{
+public class SocialHuman extends Human {
   private int groupID;
   private GridPoint partyPos;
-  
+
   public void setPartyPos(GridPoint partyPos) {
     this.partyPos = partyPos;
   }
@@ -23,26 +23,14 @@ public class SocialHuman extends Human{
   }
 
   public SocialHuman(ContinuousSpace<Object> space, Grid<Object> grid, String hName) {
-    super(space,grid,hName);
-    // TODO Auto-generated constructor stub
+    super(space, grid, hName);
   }
-  
+
   @ScheduledMethod(start = 1, interval = 1)
   public void run() {
-    // get the grid location of this Human
     GridPoint pt = grid.getLocation(this);
-    // use the GridCellNgh class to create GridCells for
-    // the surrounding neighborhood.
+    super.moveTowards(partyPos);
+  }
 
-    
-    GridPoint location =findLocation(grid,pt);
-    super.moveTowards(location);
-  }
-  
-  @Override
-  public GridPoint findLocation(Grid<Object> grid, GridPoint pt) {
-        //SocietyModel.findPartyLocation(space, this);
-        GridPoint partyLocation= SocietyModel.getPartyLocation();
-  return partyLocation;
-  }
+
 }
