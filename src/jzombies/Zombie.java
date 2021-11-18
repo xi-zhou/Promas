@@ -37,7 +37,6 @@ public class Zombie extends Human {
   }
 
   public void infect() {
-    ArrayList<String> modelAllInfection = new ArrayList<String>();
     ArrayList<String> newInfection = new ArrayList<String>();
 
     GridPoint pt = grid.getLocation(this);
@@ -49,11 +48,9 @@ public class Zombie extends Human {
       }
     }
 
-
-    modelAllInfection = TransmissionModel.getInfectedPerson();
     newInfection = Database.getNewInfection();
 
-    System.out.println(this.name + " new infection list" + newInfection);
+    //System.out.println(this.name + " new infection list" + newInfection);
 
 
     // for each zombie check if there are humans in its moore neighborhood, if yes than for each
@@ -89,8 +86,8 @@ public class Zombie extends Human {
         }
       }
     } else {
-      System.out
-          .println(name + " infection detected but not in this ngh,this ngh contains no human, or resistance eist");
+//      System.out
+//          .println(name + " infection detected but not in this ngh,this ngh contains no human, or resistance eist");
     }
 
   }

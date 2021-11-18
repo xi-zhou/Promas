@@ -2,6 +2,8 @@ package jzombies;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -13,6 +15,7 @@ import jep.JepException;
 import jep.SharedInterpreter;
 import jep.SubInterpreter;
 import repast.simphony.engine.schedule.ScheduledMethod;
+import repast.simphony.random.RandomHelper;
 
 
 public final class TransmissionModel {
@@ -58,17 +61,23 @@ public final class TransmissionModel {
     getResFromJep();
   }
 
+  /**
+   * Take a random subset from problog model.
+   */
   public static void getResFromJep() {
     Gson gson = new Gson();
     Type type = new TypeToken<Map<String, Float>>() {}.getType();
     Map<String, Float> myMap = gson.fromJson(res, type);
-
-    for (Entry<String, Float> entry : myMap.entrySet()) {
-      if (entry.getValue() >= 0.05) { 
-        String name[] = entry.getKey().split("'");
-        //System.out.println(entry.getKey()+" : "+entry.getValue());
-        infectedPerson.add(name[1]);
-      }
+    
+    ArrayList<String> keys = new ArrayList<>(myMap.keySet());
+    Collections.shuffle(keys);
+    int range = RandomHelper.nextIntFromTo(1, keys.size() - 1);
+    List<String> sampleInfection = keys.subList(1, range);
+    System.out.println(range+"/"+(keys.size()-1)+" sample is taken");
+    
+    for(String term:sampleInfection) {
+    String name[] = term.split("'");
+    infectedPerson.add(name[1]);
     }
   }
 

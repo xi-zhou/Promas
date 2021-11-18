@@ -25,9 +25,9 @@
       <SeriesData>
         <label>resistance Human Count</label>
         <color>
-          <red>0</red>
-          <green>0</green>
-          <blue>255</blue>
+          <red>82</red>
+          <green>190</green>
+          <blue>35</blue>
           <alpha>255</alpha>
         </color>
       </SeriesData>
@@ -37,9 +37,9 @@
       <SeriesData>
         <label>cautious Human Count</label>
         <color>
-          <red>0</red>
-          <green>0</green>
-          <blue>255</blue>
+          <red>185</red>
+          <green>37</green>
+          <blue>193</blue>
           <alpha>255</alpha>
         </color>
       </SeriesData>
@@ -50,9 +50,9 @@
       <SeriesData>
         <label>social Human Count</label>
         <color>
-          <red>0</red>
-          <green>0</green>
-          <blue>255</blue>
+          <red>65</red>
+          <green>108</green>
+          <blue>251</blue>
           <alpha>255</alpha>
         </color>
       </SeriesData>
