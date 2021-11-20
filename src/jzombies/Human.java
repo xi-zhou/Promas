@@ -20,12 +20,16 @@ public class Human {
   protected ContinuousSpace<Object> space;
   protected Grid<Object> grid;
   protected String name;
-
+  protected static int infectionRadius;
 
   public Human(ContinuousSpace<Object> space, Grid<Object> grid, String hName) {
     this.space = space;
     this.grid = grid;
     this.name = hName;
+  }
+
+  public static void setInfectionRadius(int infectionRadius) {
+    Human.infectionRadius = infectionRadius;
   }
 
   public GridPoint findLocation(Grid<Object> grid, GridPoint pt) {
@@ -37,11 +41,9 @@ public class Human {
     return randomPos;
   }
 
-
   public ContinuousSpace<Object> getSpace() {
     return space;
   }
-
 
   public Grid<Object> getGrid() {
     return grid;

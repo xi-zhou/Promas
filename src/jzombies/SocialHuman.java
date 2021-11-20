@@ -29,7 +29,24 @@ public class SocialHuman extends Human {
   @ScheduledMethod(start = 1, interval = 1)
   public void run() {
     GridPoint pt = grid.getLocation(this);
+    // GridPoint location = findLocation(grid, pt);
+    // super.moveTowards(location);
     super.moveTowards(partyPos);
+  }
+
+  @Override
+  public GridPoint findLocation(Grid<Object> grid, GridPoint pt) {
+    GridCellNgh<Human> nghCreator = new GridCellNgh<Human>(grid, pt, Human.class, 1, 1);
+    List<GridCell<Human>> gridCells = nghCreator.getNeighborhood(true);
+    GridPoint mostHumanPos = null;
+    int maxCount = Integer.MIN_VALUE;
+    for (GridCell<Human> cell : gridCells) {
+      if (cell.size() > maxCount) {
+        mostHumanPos = cell.getPoint();
+        maxCount = cell.size();
+      }
+    } ;
+    return mostHumanPos;
   }
 
 

@@ -4,19 +4,32 @@
 						defaultValue="__NULL__"
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
-									
+						displayOrder="0.0"									
+		/>
+				<parameter name="infection_radius" displayName="Infection radius" type="int" 
+						defaultValue="10" 
+						isReadOnly="false" 
+						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"									
+		/>
+				<parameter name="grid_size_x" displayName="Grid size(x)" type="int" 
+						defaultValue="50" 
+						isReadOnly="false" 
+						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"									
+		/>
+				<parameter name="grid_size_y" displayName="Grid size(y)" type="int" 
+						defaultValue="50" 
+						isReadOnly="false" 
+						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"									
 		/>
 				<parameter name="cautious_human_count" displayName="Cautious Human Count" type="int" 
 						defaultValue="20" 
 						isReadOnly="false" 
-						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
-									
+						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"									
 		/>		
 				<parameter name="social_human_count" displayName="Social Human Count" type="int" 
-						defaultValue="15" 
+						defaultValue="20" 
 						isReadOnly="false" 
-						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
-									
+						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"									
 		/>					
 				<parameter name="zombie_count" displayName="Zombie Count" type="int" 
 						defaultValue="25" 

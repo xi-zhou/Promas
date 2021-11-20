@@ -39,11 +39,9 @@ public final class SocietyModel {
     cautiousHuman.add(human);
   }
 
-
   public static Map<Integer, List<SocialHuman>> group() {
 
     for (int i = 0; i < numOfGroups; ++i) {
-      // parts.add(new ArrayList<>());
       group.put(i, new ArrayList<>());
     }
     final int N = socialHuman.size();

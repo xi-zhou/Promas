@@ -35,6 +35,9 @@ public final class Database {
 
     String isIll = "CREATE TABLE \"is_ill\" (\n" + "	\"name\"	TEXT UNIQUE,\n"
         + "	PRIMARY KEY(\"name\")\n" + ");";
+    String resistance = "CREATE TABLE \"resistance\" (\n" + "    \"name\"  TEXT UNIQUE,\n"
+        + "    PRIMARY KEY(\"name\"),\n"
+        + "    FOREIGN KEY(\"name\") REFERENCES \"person\"(\"name\")\n" + ");";
     try {
       Class.forName("org.sqlite.JDBC");
     } catch (ClassNotFoundException e1) {
@@ -47,6 +50,7 @@ public final class Database {
         statement.execute(person);
         statement.execute(point);
         statement.execute(isIll);
+        statement.execute(resistance);
         System.out.println("A new database has been created.");
       }
     } catch (SQLException e) {
@@ -56,7 +60,6 @@ public final class Database {
 
   static Database create() {
     return new Database();
-
   }
 
   private static Connection connect() {
@@ -70,8 +73,6 @@ public final class Database {
     return connection;
   }
 
-
-
   public static void addIsIll(String zName) {
     String illPerson = "INSERT INTO is_ill(name) VALUES(?)";
     try (Connection connection = connect();
@@ -81,7 +82,28 @@ public final class Database {
     } catch (SQLException e) {
       System.out.println(e.getMessage());
     }
+  }
 
+  public static void addResistance(String zName) {
+    String resisPerson = "INSERT INTO resistance(name) VALUES(?)";
+    try (Connection connection = connect();
+        PreparedStatement addPerson = connection.prepareStatement(resisPerson);) {
+      addPerson.executeUpdate();
+      addPerson.setString(1, zName);
+    } catch (SQLException e) {
+      System.out.println(e.getMessage());
+    }
+  }
+
+  public static void removeIllPerson(String zName) {
+    String rmIsIll = "DELETE FROM is_ill WHERE name=?";
+    try (Connection connection = connect();
+        PreparedStatement rmPerson = connection.prepareStatement(rmIsIll)) {
+      rmPerson.setString(1, zName);
+      rmPerson.executeUpdate();
+    } catch (SQLException e) {
+      System.out.println(e.getMessage());
+    }
   }
 
   public static void addPerson(String hName) {
