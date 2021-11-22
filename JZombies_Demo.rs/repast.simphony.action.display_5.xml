@@ -3,11 +3,11 @@
   <type>2D</type>
   <styles>
     <entry>
-      <string>jzombies.Zombie</string>
-      <string>repast.simphony.visualization.editedStyle.EditedStyle2D</string>
+      <string>jzombies.QuarantineZombie</string>
+      <string>repast.simphony.visualizationOGL2D.DefaultStyleOGL2D</string>
     </entry>
     <entry>
-      <string>jzombies.SocialHuman</string>
+      <string>jzombies.Zombie</string>
       <string>repast.simphony.visualization.editedStyle.EditedStyle2D</string>
     </entry>
     <entry>
@@ -17,16 +17,20 @@
     <entry>
       <string>jzombies.ResistanceHuman</string>
       <string>repast.simphony.visualization.editedStyle.EditedStyle2D</string>
-    </entry>        
-  </styles>
-  <editedStyles>
-    <entry>
-      <string>jzombies.Zombie</string>
-      <string>jzombies.Zombie.style_0.xml</string>
     </entry>
     <entry>
       <string>jzombies.SocialHuman</string>
-      <string>jzombies.SocialHuman.style_0.xml</string>
+      <string>repast.simphony.visualization.editedStyle.EditedStyle2D</string>
+    </entry>
+  </styles>
+  <editedStyles>
+    <entry>
+      <string>jzombies.QuarantineZombie</string>
+      <string>jzombies.QuarantineZombie.style_0.xml</string>
+    </entry>
+    <entry>
+      <string>jzombies.Zombie</string>
+      <string>jzombies.Zombie.style_0.xml</string>
     </entry>
     <entry>
       <string>jzombies.CautiousHuman</string>
@@ -35,7 +39,11 @@
     <entry>
       <string>jzombies.ResistanceHuman</string>
       <string>jzombies.ResistanceHuman.style_0.xml</string>
-    </entry>         
+    </entry>
+    <entry>
+      <string>jzombies.SocialHuman</string>
+      <string>jzombies.SocialHuman.style_0.xml</string>
+    </entry>
   </editedStyles>
   <netStyles/>
   <editedNetStyles/>
@@ -47,28 +55,32 @@
     <pType>LAST</pType>
     <duration>-1.0</duration>
     <frequency>REPEAT</frequency>
-    <hashCode>-1486383999</hashCode>
+    <hashCode>-1636579354</hashCode>
   </schedParams>
   <layoutClassName>foo.bar.baz</layoutClassName>
   <layoutProjection>grid</layoutProjection>
   <layoutInterval>0</layoutInterval>
   <layerOrder>
     <entry>
-      <string>jzombies.Zombie</string>
+      <string>jzombies.QuarantineZombie</string>
       <int>0</int>
     </entry>
     <entry>
-      <string>jzombies.ResistanceHuman</string>
-      <int>3</int>
-    </entry>
-    <entry>
-      <string>jzombies.SocialHuman</string>
+      <string>jzombies.Zombie</string>
       <int>1</int>
     </entry>
     <entry>
       <string>jzombies.CautiousHuman</string>
+      <int>3</int>
+    </entry>
+    <entry>
+      <string>jzombies.ResistanceHuman</string>
+      <int>4</int>
+    </entry>
+    <entry>
+      <string>jzombies.SocialHuman</string>
       <int>2</int>
-    </entry>     
+    </entry>
   </layerOrder>
   <projections>
     <repast.simphony.scenario.data.ProjectionData>

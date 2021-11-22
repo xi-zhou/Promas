@@ -68,6 +68,18 @@
         </color>
       </SeriesData>
     </entry>
+        <entry>
+      <string>quarantine Zombie Count</string>
+      <SeriesData>
+        <label>quarantine Zombie Count</label>
+        <color>
+          <red>8</red>
+          <green>8</green>
+          <blue>8</blue>
+          <alpha>255</alpha>
+        </color>
+      </SeriesData>
+    </entry>
   </seriesIds>
   <dataValueIds/>
   <plotRangeLength>-1</plotRangeLength>

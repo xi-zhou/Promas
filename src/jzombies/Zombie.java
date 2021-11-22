@@ -34,9 +34,29 @@ public class Zombie extends Human {
 
     GridPoint pt = grid.getLocation(this);
     gridCells = getNgh(grid, pt);
-    infect(gridCells);
-    GridPoint location = findLocation(grid, pt);
-    super.moveTowards(location);
+    
+    double seed = RandomHelper.nextDoubleFromTo(0.0, 1.0);
+    if (seed > 0.8) {
+      quarantine();
+    }else {
+      infect(gridCells);
+      GridPoint location = findLocation(grid, pt);
+      super.moveTowards(location);
+    }   
+
+  }
+
+  private void quarantine() {
+    System.out.println(name + " is in quarantine");
+    GridPoint pt = grid.getLocation(this);
+    NdPoint spacePt = space.getLocation(this);
+    Context<Object> context = ContextUtils.getContext(this);
+    context.remove(this);
+
+    QuarantineZombie human = new QuarantineZombie(space, grid, name);
+    context.add(human);
+    space.moveTo(human, spacePt.getX(), spacePt.getY());
+    grid.moveTo(human, pt.getX(), pt.getY());
   }
 
   private List<GridCell<Human>> getNgh(Grid<Object> grid, GridPoint pt) {
