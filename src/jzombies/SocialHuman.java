@@ -32,6 +32,11 @@ public class SocialHuman extends Human {
     // GridPoint location = findLocation(grid, pt);
     // super.moveTowards(location);
     super.moveTowards(partyPos);
+    double seed = RandomHelper.nextDoubleFromTo(0.0, 1.0);
+
+    if(seed>0.9) {
+      super.vaccination();
+      }
   }
 
   @Override

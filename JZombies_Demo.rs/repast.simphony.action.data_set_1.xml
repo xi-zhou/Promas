@@ -51,6 +51,13 @@
         <id>quarantine Zombie Count</id>
       </repast.simphony.data2.engine.CountSourceDefinition>
     </entry>
+    <entry>
+      <string>dead Zombie Count</string>
+      <repast.simphony.data2.engine.CountSourceDefinition>
+        <typeName>jzombies.DeadZombie</typeName>
+        <id>dead Zombie Count</id>
+      </repast.simphony.data2.engine.CountSourceDefinition>
+    </entry>    
   </countSources>
   <customNADataSources class="linked-hash-map"/>
   <customAggDataSources class="linked-hash-map"/>

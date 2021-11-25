@@ -10,5 +10,19 @@ debug.log
 velocity.log
 
 velocity.log.1
+batch
+docs
+freezedried_data
+launchers
+license.txt
+MessageCenter.log4j.properties
+model_description.txt
+
+installer
+lib
+misc
+repast-licenses
+
+
 
 bin/

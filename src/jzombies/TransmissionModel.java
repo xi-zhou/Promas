@@ -47,10 +47,10 @@ public final class TransmissionModel {
         ":- use_module(library(db)).\n" + 
         ":- sqlite_load('/Users/z.x/test.db').\n" + 
         "P :: infects(PERSONx,PERSONy) :- point(PERSONx, X, Y),\n" + 
-        "point(PERSONy, A, B), PERSONx\\\\=PERSONy,\\+resistance(PERSONx),\\+resistance(PERSONy),\n" + 
+        "point(PERSONy, A, B), PERSONx\\\\=PERSONy," + 
         "D is sqrt((A-X)^2 + (B-Y)^2),D <10 , D>0,P is min(1,0.1/(D^2)).\n" + 
         "\n" + 
-        "infects(PERSONx,PERSONy) :- point(PERSONx, X, Y),\\+resistance(PERSONx),\\+resistance(PERSONy),\n" + 
+        "infects(PERSONx,PERSONy) :- point(PERSONx, X, Y)," + 
         "point(PERSONy, X, Y).\n" + 
         "ill(PERSONx):-infects(PERSONx,PERSONy), is_ill(PERSONy).\n" + 
         "ill(PERSONx):-is_ill(PERSONx).\n" + 

@@ -22,8 +22,16 @@
       <string>jzombies.SocialHuman</string>
       <string>repast.simphony.visualization.editedStyle.EditedStyle2D</string>
     </entry>
+    <entry>
+      <string>jzombies.DeadZombie</string>
+      <string>repast.simphony.visualization.editedStyle.EditedStyle2D</string>
+    </entry>    
   </styles>
   <editedStyles>
+    <entry>
+      <string>jzombies.DeadZombie</string>
+      <string>jzombies.DeadZombie.style_3.xml</string>
+    </entry>  
     <entry>
       <string>jzombies.QuarantineZombie</string>
       <string>jzombies.QuarantineZombie.style_3.xml</string>
@@ -71,6 +79,10 @@
   <layoutProjection>space</layoutProjection>
   <layoutInterval>0</layoutInterval>
   <layerOrder>
+    <entry>
+      <string>jzombies.DeadZombie</string>
+      <int>5</int>
+    </entry>  
     <entry>
       <string>jzombies.QuarantineZombie</string>
       <int>0</int>

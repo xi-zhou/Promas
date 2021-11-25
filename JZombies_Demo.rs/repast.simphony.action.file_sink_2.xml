@@ -9,6 +9,8 @@
     <string>resistance Human Count</string>
     <string>cautious Human Count</string>
     <string>Zombie Count</string>
+    <string>quarantine Zombie Count</string>
+    <string>dead Zombie Count</string>
   </sourceIds>
   <fileName>output/ModelOutput.txt</fileName>
   <addTimeStamp>true</addTimeStamp>

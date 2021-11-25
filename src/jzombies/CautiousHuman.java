@@ -21,7 +21,14 @@ public class CautiousHuman extends Human {
     GridPoint pt = grid.getLocation(this);
     GridPoint location = findLocation(grid, pt);
     super.moveTowards(location);
+    double seed = RandomHelper.nextDoubleFromTo(0.0, 1.0);
+
+    if(seed>0.8) {
+      super.vaccination();
+      }
   }
+
+
 
   @Override
   public GridPoint findLocation(Grid<Object> grid, GridPoint pt) {

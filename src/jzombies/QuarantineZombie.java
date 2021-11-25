@@ -15,13 +15,15 @@ public class QuarantineZombie extends Human{
     super(space, grid, hName);
   }
   
-  @ScheduledMethod(start = 2.5, interval = 1)
+  @ScheduledMethod(start = 2.5, interval = 2)
   public void recover() {
     double seed = RandomHelper.nextDoubleFromTo(0.0, 1.0);
-    if (seed > 0.7) {
+    if(seed>0.99) {
+      dead();
+    }else if (seed > 0.7) {
       Database.removeIllPerson(name);
       Database.addResistance(name);
-      System.out.println(name + " after quarantine is recovred");
+      System.out.println(name + " after quarantine recovred");
       GridPoint pt = grid.getLocation(this);
       NdPoint spacePt = space.getLocation(this);
       Context<Object> context = ContextUtils.getContext(this);
@@ -33,6 +35,20 @@ public class QuarantineZombie extends Human{
       grid.moveTo(human, pt.getX(), pt.getY());
 
     }
+  }
+
+  private void dead() {
+    System.out.println(name + " during quarantine dead");
+    GridPoint pt = grid.getLocation(this);
+    NdPoint spacePt = space.getLocation(this);
+    Context<Object> context = ContextUtils.getContext(this);
+    context.remove(this);
+    
+    DeadZombie human = new DeadZombie(space, grid, name);
+    context.add(human);
+    space.moveTo(human, spacePt.getX(), spacePt.getY());
+    grid.moveTo(human, pt.getX(), pt.getY());
+    
   }
   
   

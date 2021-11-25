@@ -80,6 +80,18 @@
         </color>
       </SeriesData>
     </entry>
+    <entry>
+      <string>dead Zombie Count</string>
+      <SeriesData>
+        <label>dead Zombie Count</label>
+        <color>
+          <red>102</red>
+          <green>77</green>
+          <blue>51</blue>
+          <alpha>255</alpha>
+        </color>
+      </SeriesData>
+    </entry>    
   </seriesIds>
   <dataValueIds/>
   <plotRangeLength>-1</plotRangeLength>

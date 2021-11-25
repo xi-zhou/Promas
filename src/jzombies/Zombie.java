@@ -90,15 +90,20 @@ public class Zombie extends Human {
 
     // get all humans at zombies'grid
     Collection<Object> objInList = new ArrayList<Object>();
-
+    double seed = RandomHelper.nextDoubleFromTo(0.0, 1.0);
+    
     for (GridCell cell : gridCells) {
       objInList = makeCollection(cell.items());
       for (Object obj : objInList) {
+        if (seed > 0.95 && obj instanceof ResistanceHuman) {
+          humans.add(obj);
+        }
         if (obj instanceof SocialHuman || obj instanceof CautiousHuman) {
           humans.add(obj);
         }
       }
     }
+
 
     newInfection = Database.getNewInfection();
 
@@ -119,8 +124,12 @@ public class Zombie extends Human {
         }
         if (newInfection.contains(hName)) {
           Database.addIsIll(hName);
+          if(obj instanceof ResistanceHuman) {
+            System.out.println(hName+" re-infection");
+          }else {
+            System.out.println("Infecting" + hName);
+          }
 
-          System.out.println("Infecting" + hName);
           Database.removeFromList(hName);
           NdPoint spacePt = space.getLocation(obj);
           Context<Object> context = ContextUtils.getContext(obj);
@@ -137,17 +146,20 @@ public class Zombie extends Human {
         }
       }
     } else {
-      // System.out
-      // .println(name + " infection detected but not in this ngh,this ngh contains no human, or
-      // resistance eist");
+//       System.out
+//       .println(name + " infection detected but not in this ngh,this ngh contains no human, or"+
+//       "resistance eist");
     }
 
   }
 
-  @ScheduledMethod(start = 2.5, interval = 1)
+  @ScheduledMethod(start = 2.5, interval = 2)
   public void recover() {
     double seed = RandomHelper.nextDoubleFromTo(0.0, 1.0);
-    if (seed > 0.9) {
+
+    if(seed>0.97) {
+      dead();
+    }else if (seed > 0.9) {
       Database.removeIllPerson(name);
       Database.addResistance(name);
       System.out.println(name + " is recovred");
@@ -162,6 +174,19 @@ public class Zombie extends Human {
       grid.moveTo(human, pt.getX(), pt.getY());
 
     }
+  }
+  private void dead() {
+    System.out.println(name + " during infection is dead");
+    GridPoint pt = grid.getLocation(this);
+    NdPoint spacePt = space.getLocation(this);
+    Context<Object> context = ContextUtils.getContext(this);
+    context.remove(this);
+    
+    DeadZombie human = new DeadZombie(space, grid, name);
+    context.add(human);
+    space.moveTo(human, spacePt.getX(), spacePt.getY());
+    grid.moveTo(human, pt.getX(), pt.getY());
+    
   }
 
 }

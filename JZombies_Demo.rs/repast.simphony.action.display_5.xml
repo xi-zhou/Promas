@@ -3,6 +3,10 @@
   <type>2D</type>
   <styles>
     <entry>
+      <string>jzombies.DeadZombie</string>
+      <string>repast.simphony.visualizationOGL2D.DefaultStyleOGL2D</string>
+    </entry>  
+    <entry>
       <string>jzombies.QuarantineZombie</string>
       <string>repast.simphony.visualizationOGL2D.DefaultStyleOGL2D</string>
     </entry>
@@ -24,6 +28,10 @@
     </entry>
   </styles>
   <editedStyles>
+    <entry>
+      <string>jzombies.DeadZombie</string>
+      <string>jzombies.DeadZombie.style_0.xml</string>
+    </entry>  
     <entry>
       <string>jzombies.QuarantineZombie</string>
       <string>jzombies.QuarantineZombie.style_0.xml</string>
@@ -61,6 +69,10 @@
   <layoutProjection>grid</layoutProjection>
   <layoutInterval>0</layoutInterval>
   <layerOrder>
+    <entry>
+      <string>jzombies.DeadZombie</string>
+      <int>5</int>
+    </entry>  
     <entry>
       <string>jzombies.QuarantineZombie</string>
       <int>0</int>

@@ -1,6 +1,7 @@
 package jzombies;
 
 import java.util.List;
+import repast.simphony.context.Context;
 import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.engine.watcher.Watch;
 import repast.simphony.engine.watcher.WatcherTriggerSchedule;
@@ -12,6 +13,7 @@ import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.continuous.NdPoint;
 import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridPoint;
+import repast.simphony.util.ContextUtils;
 import repast.simphony.util.SimUtilities;
 
 
@@ -66,6 +68,22 @@ public class Human {
       grid.moveTo(this, (int) myPoint.getX(), (int) myPoint.getY());
       Database.updatePoint(name, myPoint.getX(), myPoint.getY());
     }
+  }
+
+  
+  public void vaccination() {
+    Database.addResistance(name);
+    System.out.println(name + " is vaccinated");
+    GridPoint pt = grid.getLocation(this);
+    NdPoint spacePt = space.getLocation(this);
+    Context<Object> context = ContextUtils.getContext(this);
+    context.remove(this);
+
+    ResistanceHuman human = new ResistanceHuman(space, grid, name);
+    context.add(human);
+    space.moveTo(human, spacePt.getX(), spacePt.getY());
+    grid.moveTo(human, pt.getX(), pt.getY());
+    
   }
 
 }
