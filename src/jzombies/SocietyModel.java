@@ -19,10 +19,13 @@ public final class SocietyModel {
   private static List<Human> cautiousHuman = new ArrayList<Human>();
   private static Map<Integer, List<SocialHuman>> group = new HashMap<Integer, List<SocialHuman>>();
   final static int numOfGroups = 4;
-  static GridPoint partyLocation;
+  private static Map<String, GridPoint> partyLocationMap = new HashMap<String, GridPoint>();
+  static private List<String> socialNameList = new ArrayList<String>();
+  static private List<String> cautiousNameList = new ArrayList<String>();
 
-  public static GridPoint getPartyLocation() {
-    return partyLocation;
+  public static GridPoint getPartyLocation(String name) {
+    GridPoint pt = partyLocationMap.get(name);
+    return pt;
   }
 
   private SocietyModel() {}
@@ -33,10 +36,28 @@ public final class SocietyModel {
 
   static void addSocialHuman(SocialHuman human) {
     socialHuman.add(human);
+    socialNameList.add(human.name);
   }
 
-  public static void addCautiousHuman(Human human) {
+  public static void addCautiousHuman(CautiousHuman human) {
     cautiousHuman.add(human);
+    cautiousNameList.add(human.name);
+  }
+
+  public static boolean isSocial(String name) {
+    if (socialNameList.contains(name)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public static boolean isCautious(String name) {
+    if (cautiousNameList.contains(name)) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   public static Map<Integer, List<SocialHuman>> group() {
@@ -89,13 +110,17 @@ public final class SocietyModel {
     double centerX = (xMax + xMin) / 2;
 
     GridPoint partyLocation = new GridPoint((int) centerY, (int) centerX);
-
+    // List<String> friendsNameList = new ArrayList<String>();
     for (SocialHuman human : friends) {
       human.setPartyPos(partyLocation);
       human.setGroupID(grpId);
+      // friendsNameList.add(human.name);
+      partyLocationMap.put(human.name, partyLocation);
     }
 
     System.out.println(grpId + " meeting at " + (int) centerY + " " + (int) centerX);
+    // System.out.println(friendsNameList);
   }
+
 
 }

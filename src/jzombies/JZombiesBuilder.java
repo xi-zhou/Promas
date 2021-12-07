@@ -91,6 +91,7 @@ public class JZombiesBuilder implements ContextBuilder<Object> {
       Database.addPerson(hName);
       SocialHuman socialHuman = new SocialHuman(space, grid, hName);
       SocietyModel.addSocialHuman(socialHuman);
+
       context.add(socialHuman);
     }
 

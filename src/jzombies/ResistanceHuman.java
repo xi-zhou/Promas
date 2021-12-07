@@ -18,6 +18,6 @@ public class ResistanceHuman extends Human {
   public void run() {
     GridPoint pt = grid.getLocation(this);
     GridPoint location = super.findLocation(grid, pt);
-    super.moveTowards(location);
+    super.moveTowards(location, 5);
   }
 }

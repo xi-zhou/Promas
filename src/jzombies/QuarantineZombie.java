@@ -9,18 +9,18 @@ import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridPoint;
 import repast.simphony.util.ContextUtils;
 
-public class QuarantineZombie extends Human{
-  
+public class QuarantineZombie extends Human {
+
   public QuarantineZombie(ContinuousSpace<Object> space, Grid<Object> grid, String hName) {
     super(space, grid, hName);
   }
-  
+
   @ScheduledMethod(start = 2.5, interval = 2)
   public void recover() {
     double seed = RandomHelper.nextDoubleFromTo(0.0, 1.0);
-    if(seed>0.99) {
+    if (seed > 0.99) {
       dead();
-    }else if (seed > 0.7) {
+    } else if (seed > 0.7) {
       Database.removeIllPerson(name);
       Database.addResistance(name);
       System.out.println(name + " after quarantine recovred");
@@ -43,14 +43,14 @@ public class QuarantineZombie extends Human{
     NdPoint spacePt = space.getLocation(this);
     Context<Object> context = ContextUtils.getContext(this);
     context.remove(this);
-    
+
     DeadZombie human = new DeadZombie(space, grid, name);
     context.add(human);
     space.moveTo(human, spacePt.getX(), spacePt.getY());
     grid.moveTo(human, pt.getX(), pt.getY());
-    
+
   }
-  
-  
+
+
 
 }

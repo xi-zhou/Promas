@@ -48,7 +48,7 @@ public final class TransmissionModel {
         ":- sqlite_load('/Users/z.x/test.db').\n" + 
         "P :: infects(PERSONx,PERSONy) :- point(PERSONx, X, Y),\n" + 
         "point(PERSONy, A, B), PERSONx\\\\=PERSONy," + 
-        "D is sqrt((A-X)^2 + (B-Y)^2),D <10 , D>0,P is min(1,0.1/(D^2)).\n" + 
+        "D is sqrt((A-X)^2 + (B-Y)^2),D <10 , D>0,P is min(1,0.5/(D^2)).\n" + 
         "\n" + 
         "infects(PERSONx,PERSONy) :- point(PERSONx, X, Y)," + 
         "point(PERSONy, X, Y).\n" + 
@@ -76,24 +76,12 @@ public final class TransmissionModel {
     Map<String, Float> myMap = gson.fromJson(res, type);
   
     // compare to random seed
-//    double seed = RandomHelper.nextDoubleFromTo(0.0,1.0);
-//    for(Entry<String,Float>entry:myMap.entrySet()) {
-//      if(entry.getValue()>=(float)seed) {
-//      String name[] = entry.getKey().split("'");
-//        infectedPerson.add(name[1]);
-//      }
-//    }
-    
-    //get random subset
-    ArrayList<String> keys = new ArrayList<>(myMap.keySet());
-    Collections.shuffle(keys);
-    int range = RandomHelper.nextIntFromTo(1, keys.size() - 1);
-    List<String> sampleInfection = keys.subList(1, range);
-    System.out.println(range+"/"+(keys.size()-1)+" sample is taken");
-    
-    for(String term:sampleInfection) {
-    String name[] = term.split("'");
-    infectedPerson.add(name[1]);
+    double seed = RandomHelper.nextDoubleFromTo(0.0,1.0);
+    for(Entry<String,Float>entry:myMap.entrySet()) {
+      if(entry.getValue()>=(float)seed) {
+      String name[] = entry.getKey().split("'");
+        infectedPerson.add(name[1]);
+      }
     }
   }
   

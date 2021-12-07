@@ -41,7 +41,7 @@ public class Zombie extends Human {
     }else {
       infect(gridCells);
       GridPoint location = findLocation(grid, pt);
-      super.moveTowards(location);
+      super.moveTowards(location,3);
     }   
 
   }
@@ -68,11 +68,32 @@ public class Zombie extends Human {
 
   @Override
   public GridPoint findLocation(Grid<Object> grid, GridPoint pt) {
-    SimUtilities.shuffle(gridCells, RandomHelper.getUniform());
-    GridPoint randomPos =
-        gridCells.get(RandomHelper.nextIntFromTo(0, gridCells.size() - 1)).getPoint();
-    return randomPos;
-  }
+    if(SocietyModel.isSocial(this.name)) {
+      System.out.println("Social zombie "+ this.name);
+      GridPoint partyPos= SocietyModel.getPartyLocation(this.name);
+      System.out.println("Social zombie "+ this.name+" go to "+ partyPos.getX()+partyPos.getY());
+      return partyPos;
+    }else if(SocietyModel.isCautious(this.name)){
+      System.out.println("cautious zombie");
+      GridCellNgh<Human> nghCreator = new GridCellNgh<Human>(grid, pt, Human.class, 1, 1);
+      List<GridCell<Human>> gridCells = nghCreator.getNeighborhood(true);
+      GridPoint leastHumanPos = null;
+      int minCount = Integer.MAX_VALUE;
+      for (GridCell<Human> cell : gridCells) {
+        if (cell.size() < minCount) {
+          leastHumanPos = cell.getPoint();
+          minCount = cell.size();
+        }
+      } ;
+      return leastHumanPos;
+    }else {
+      System.out.println("ini zombie or resis ");
+      SimUtilities.shuffle(gridCells, RandomHelper.getUniform());
+      GridPoint randomPos =
+          gridCells.get(RandomHelper.nextIntFromTo(0, gridCells.size() - 1)).getPoint();
+      return randomPos;
+    }
+    }
 
   public static <E> Collection<E> makeCollection(Iterable<E> iter) {
     Collection<E> list = new ArrayList<E>();
@@ -127,7 +148,7 @@ public class Zombie extends Human {
           if(obj instanceof ResistanceHuman) {
             System.out.println(hName+" re-infection");
           }else {
-            System.out.println("Infecting" + hName);
+            System.out.println("Infecting " + hName);
           }
 
           Database.removeFromList(hName);
@@ -156,10 +177,7 @@ public class Zombie extends Human {
   @ScheduledMethod(start = 2.5, interval = 2)
   public void recover() {
     double seed = RandomHelper.nextDoubleFromTo(0.0, 1.0);
-
-    if(seed>0.97) {
-      dead();
-    }else if (seed > 0.9) {
+      if (seed > 0.9) {
       Database.removeIllPerson(name);
       Database.addResistance(name);
       System.out.println(name + " is recovred");
@@ -175,18 +193,7 @@ public class Zombie extends Human {
 
     }
   }
-  private void dead() {
-    System.out.println(name + " during infection is dead");
-    GridPoint pt = grid.getLocation(this);
-    NdPoint spacePt = space.getLocation(this);
-    Context<Object> context = ContextUtils.getContext(this);
-    context.remove(this);
-    
-    DeadZombie human = new DeadZombie(space, grid, name);
-    context.add(human);
-    space.moveTo(human, spacePt.getX(), spacePt.getY());
-    grid.moveTo(human, pt.getX(), pt.getY());
-    
-  }
+  
+
 
 }

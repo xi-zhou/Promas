@@ -57,20 +57,20 @@ public class Human {
    * 
    * @param pt random point
    */
-  public void moveTowards(GridPoint pt) {
+  public void moveTowards(GridPoint pt, double distance) {
     // only move if we are not already in this grid location
     if (!pt.equals(grid.getLocation(this))) {
       NdPoint myPoint = space.getLocation(this);
       NdPoint otherPoint = new NdPoint(pt.getX(), pt.getY());
       double angle = SpatialMath.calcAngleFor2DMovement(space, myPoint, otherPoint);
-      space.moveByVector(this, 2, angle, 0);
+      space.moveByVector(this, distance, angle, 0);
       myPoint = space.getLocation(this);
       grid.moveTo(this, (int) myPoint.getX(), (int) myPoint.getY());
       Database.updatePoint(name, myPoint.getX(), myPoint.getY());
     }
   }
 
-  
+
   public void vaccination() {
     Database.addResistance(name);
     System.out.println(name + " is vaccinated");
@@ -83,7 +83,7 @@ public class Human {
     context.add(human);
     space.moveTo(human, spacePt.getX(), spacePt.getY());
     grid.moveTo(human, pt.getX(), pt.getY());
-    
+
   }
 
 }

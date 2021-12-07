@@ -6,6 +6,9 @@ output/
 src/jzombies/test.java
 
 debug.log
+debug.log.1
+.project
+.classpath
 
 velocity.log
 
@@ -17,12 +20,13 @@ launchers
 license.txt
 MessageCenter.log4j.properties
 model_description.txt
-
+icons
 installer
 lib
 misc
+integration
 repast-licenses
-
+Repast.settings
 
 
 bin/
