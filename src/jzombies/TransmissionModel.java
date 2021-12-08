@@ -6,10 +6,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
 import jep.JepConfig;
 import jep.JepException;
 import jep.SharedInterpreter;
@@ -22,6 +20,7 @@ public final class TransmissionModel {
   private static ArrayList<String> infectedPerson = new ArrayList<String>();
   static String res;
   static SharedInterpreter interp;
+  static double prob;
 
 
   private TransmissionModel() {}

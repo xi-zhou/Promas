@@ -1,10 +1,12 @@
 package jzombies;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.Map.Entry;
 import repast.simphony.context.Context;
-import repast.simphony.engine.schedule.ScheduledMethod;
-import repast.simphony.engine.watcher.Watch;
-import repast.simphony.engine.watcher.WatcherTriggerSchedule;
 import repast.simphony.query.space.grid.GridCell;
 import repast.simphony.query.space.grid.GridCellNgh;
 import repast.simphony.random.RandomHelper;
@@ -84,6 +86,22 @@ public class Human {
     space.moveTo(human, spacePt.getX(), spacePt.getY());
     grid.moveTo(human, pt.getX(), pt.getY());
 
+  }
+
+  public List<GridCell<Human>> getNgh(Grid<Object> grid, GridPoint pt, int size) {
+    GridCellNgh<Human> nghCreator = new GridCellNgh<Human>(grid, pt, Human.class, size, size);
+    List<GridCell<Human>> gridCells = nghCreator.getNeighborhood(true);
+    return gridCells;
+  }
+
+  public <T, E> Set<T> getKeysByValue(Map<T, E> map, E value) {
+    Set<T> keys = new HashSet<T>();
+    for (Entry<T, E> entry : map.entrySet()) {
+      if (Objects.equals(value, entry.getValue())) {
+        keys.add(entry.getKey());
+      }
+    }
+    return keys;
   }
 
 }

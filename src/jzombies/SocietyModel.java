@@ -1,31 +1,34 @@
 package jzombies;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import org.apache.commons.lang3.reflect.FieldUtils;
-import repast.simphony.random.RandomHelper;
 import repast.simphony.space.continuous.ContinuousSpace;
-import repast.simphony.space.continuous.NdPoint;
 import repast.simphony.space.grid.GridPoint;
 
 public final class SocietyModel {
   private static List<SocialHuman> socialHuman = new ArrayList<SocialHuman>();
-  private static List<Human> cautiousHuman = new ArrayList<Human>();
+  private static List<CautiousHuman> cautiousHuman = new ArrayList<CautiousHuman>();
   private static Map<Integer, List<SocialHuman>> group = new HashMap<Integer, List<SocialHuman>>();
   final static int numOfGroups = 4;
   private static Map<String, GridPoint> partyLocationMap = new HashMap<String, GridPoint>();
-  static private List<String> socialNameList = new ArrayList<String>();
-  static private List<String> cautiousNameList = new ArrayList<String>();
+
+  /**
+   * @return a many to one relation map, contains all social agent name and their partylocation 
+   */
+  public static Map<String, GridPoint> getPartyLocationMap() {
+    return partyLocationMap;
+  }
 
   public static GridPoint getPartyLocation(String name) {
     GridPoint pt = partyLocationMap.get(name);
     return pt;
+  }
+
+  public static Map<Integer, List<SocialHuman>> getGroup() {
+    return group;
   }
 
   private SocietyModel() {}
@@ -36,32 +39,37 @@ public final class SocietyModel {
 
   static void addSocialHuman(SocialHuman human) {
     socialHuman.add(human);
-    socialNameList.add(human.name);
   }
 
   public static void addCautiousHuman(CautiousHuman human) {
     cautiousHuman.add(human);
-    cautiousNameList.add(human.name);
   }
 
   public static boolean isSocial(String name) {
-    if (socialNameList.contains(name)) {
-      return true;
-    } else {
-      return false;
+    for(SocialHuman human:socialHuman) {
+      if(human.name.equals(name)) {
+        return true;
+      }
     }
+    return false;
+
   }
 
   public static boolean isCautious(String name) {
-    if (cautiousNameList.contains(name)) {
-      return true;
-    } else {
-      return false;
+    for(CautiousHuman human:cautiousHuman) {
+      if(human.name.equals(name)) {
+        return true;
+      }
     }
+    return false;
   }
 
+  /**
+   * assign social human into different group.
+   * @return a map, contains unique groupID and the agents in it.
+   */
   public static Map<Integer, List<SocialHuman>> group() {
-
+  
     for (int i = 0; i < numOfGroups; ++i) {
       group.put(i, new ArrayList<>());
     }
@@ -73,8 +81,13 @@ public final class SocietyModel {
 
   }
 
+  /**
+   * for each group find a party location
+   * @param space
+   * @param group map with one to many relationship
+   */
   public static void organizeParty(ContinuousSpace<Object> space,
-      Map<Integer, List<SocialHuman>> group2) {
+      Map<Integer, List<SocialHuman>> group) {
     List<SocialHuman> friends = new ArrayList<>();
     int grpId;
 
@@ -85,7 +98,12 @@ public final class SocietyModel {
     }
   }
 
-  // find pos for a group of social person
+  /**
+   * find partylocation for A group of social person by computing centroid of polygon.
+   * @param space
+   * @param grpId unique group id
+   * @param friends list of human in a group
+   */
   private static void findPartyLocation(ContinuousSpace<Object> space, int grpId,
       List<SocialHuman> friends) {
 
@@ -110,16 +128,11 @@ public final class SocietyModel {
     double centerX = (xMax + xMin) / 2;
 
     GridPoint partyLocation = new GridPoint((int) centerY, (int) centerX);
-    // List<String> friendsNameList = new ArrayList<String>();
     for (SocialHuman human : friends) {
-      human.setPartyPos(partyLocation);
-      human.setGroupID(grpId);
-      // friendsNameList.add(human.name);
       partyLocationMap.put(human.name, partyLocation);
     }
 
     System.out.println(grpId + " meeting at " + (int) centerY + " " + (int) centerX);
-    // System.out.println(friendsNameList);
   }
 
 
