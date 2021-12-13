@@ -98,10 +98,7 @@ public class Zombie extends Human {
     for (GridCell cell : gridCells) {
       objInList = makeCollection(cell.items());
       for (Object obj : objInList) {
-        if (seed > 0.95 && obj instanceof ResistanceHuman) {
-          humans.add(obj);
-        }
-        if (obj instanceof SocialHuman || obj instanceof CautiousHuman) {
+        if (obj instanceof SocialHuman || obj instanceof CautiousHuman||(seed > 0.95 && obj instanceof ResistanceHuman)) {
           humans.add(obj);
         }
       }
@@ -158,8 +155,8 @@ public class Zombie extends Human {
   public void recover() {
     double seed = RandomHelper.nextDoubleFromTo(0.0, 1.0);
     if (seed > 0.9) {
-      Database.removeIllPerson(name);
-      Database.addResistance(name);
+      Database.rmIsIll(name);
+      Database.addIsResistant(name);
       System.out.println(name + " is recovred");
       GridPoint pt = grid.getLocation(this);
       NdPoint spacePt = space.getLocation(this);

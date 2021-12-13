@@ -21,8 +21,8 @@ public class QuarantineZombie extends Human {
     if (seed > 0.99) {
       dead();
     } else if (seed > 0.7) {
-      Database.removeIllPerson(name);
-      Database.addResistance(name);
+      Database.rmIsIll(name);
+      Database.addIsResistant(name);
       System.out.println(name + " after quarantine recovred");
       GridPoint pt = grid.getLocation(this);
       NdPoint spacePt = space.getLocation(this);

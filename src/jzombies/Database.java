@@ -25,19 +25,30 @@ public final class Database {
    * Create empty database with three empty table:person,point,isIll.Corresponding problog term.
    */
   private Database() {
-    String person = "CREATE TABLE \"person\" (\n" + "	\"name\"	TEXT UNIQUE,\n"
+    String isCautious= "CREATE TABLE \"is_cautious\" (\n" + "	\"name\"	TEXT UNIQUE,\n"
         + "	PRIMARY KEY(\"name\")\n" + ");";
-
-    String point = "CREATE TABLE \"point\" (\n" + "	\"name\"	TEXT UNIQUE,\n" + "	\"x\"	REAL,\n"
-        + "	\"y\"	REAL,\n"
-        + "	FOREIGN KEY(\"name\") REFERENCES \"person\"(\"name\") ON UPDATE CASCADE,\n"
-        + "	PRIMARY KEY(\"name\")\n" + ");";
+    String isSocial= "CREATE TABLE \"is_social\" (\n" + "   \"name\"    TEXT UNIQUE,\n"
+        + " PRIMARY KEY(\"name\")\n" + ");";
 
     String isIll = "CREATE TABLE \"is_ill\" (\n" + "	\"name\"	TEXT UNIQUE,\n"
         + "	PRIMARY KEY(\"name\")\n" + ");";
-    String resistance = "CREATE TABLE \"resistance\" (\n" + "    \"name\"  TEXT UNIQUE,\n"
-        + "    PRIMARY KEY(\"name\"),\n"
-        + "    FOREIGN KEY(\"name\") REFERENCES \"person\"(\"name\")\n" + ");";
+    String isResistant = "CREATE TABLE \"is_resistant\" (\n" + "   \"name\"    TEXT UNIQUE,\n"
+        + " PRIMARY KEY(\"name\")\n" + ");";
+    String isQuarantine = "CREATE TABLE \"in_quarantine\" (\n" + "   \"name\"    TEXT UNIQUE,\n"
+        + " PRIMARY KEY(\"name\")\n" + ");";
+    String pointTable = "CREATE TABLE \"point\" (\n" + "    \"name\"  TEXT UNIQUE,\n"
+        + "    \"x\" REAL,\n" + "    \"y\" REAL,\n" + "    PRIMARY KEY(\"name\")\n" + ");";
+    String vaccinated = "CREATE TABLE \"vaccinated\" (\n" + "    \"name\"    TEXT UNIQUE,\n"
+        + " PRIMARY KEY(\"name\")\n" + ");";
+    String reinfected= "CREATE TABLE \"reinfected\" (\n" + "    \"name\"    TEXT UNIQUE,\n"
+        + " PRIMARY KEY(\"name\")\n" + ");";
+    String dies= "CREATE TABLE \"dies\" (\n" + "    \"name\"    TEXT UNIQUE,\n"
+        + " PRIMARY KEY(\"name\")\n" + ");";
+    String quarantine= "CREATE TABLE \"quarantine\" (\n" + "    \"name\"    TEXT UNIQUE,\n"
+        + " PRIMARY KEY(\"name\")\n" + ");";
+    String recovers= "CREATE TABLE \"recovers\" (\n" + "    \"name\"    TEXT UNIQUE,\n"
+        + " PRIMARY KEY(\"name\")\n" + ");";
+
     try {
       Class.forName("org.sqlite.JDBC");
     } catch (ClassNotFoundException e1) {
@@ -47,10 +58,16 @@ public final class Database {
       if (connection != null) {
         DatabaseMetaData meta = connection.getMetaData();
         Statement statement = connection.createStatement();
-        statement.execute(person);
-        statement.execute(point);
+        statement.execute(isCautious);
+        statement.execute(isSocial);
         statement.execute(isIll);
-        statement.execute(resistance);
+        statement.execute(isResistant);
+        statement.execute(pointTable);
+        statement.execute(vaccinated);
+        statement.execute(reinfected);
+        statement.execute(dies);
+        statement.execute(quarantine);
+        statement.execute(recovers);
         System.out.println("A new database has been created.");
       }
     } catch (SQLException e) {
@@ -63,7 +80,6 @@ public final class Database {
   }
 
   private static Connection connect() {
-    // SQLite connection string
     Connection connection = null;
     try {
       connection = DriverManager.getConnection(url);
@@ -84,8 +100,8 @@ public final class Database {
     }
   }
 
-  public static void addResistance(String zName) {
-    String resisPerson = "INSERT INTO resistance(name) VALUES(?)";
+  public static void addIsResistant(String zName) {
+    String resisPerson = "INSERT INTO is_resistant(name) VALUES(?)";
     try (Connection connection = connect();
         PreparedStatement addPerson = connection.prepareStatement(resisPerson);) {
       addPerson.executeUpdate();
@@ -94,20 +110,9 @@ public final class Database {
       System.out.println(e.getMessage());
     }
   }
-
-  public static void removeIllPerson(String zName) {
-    String rmIsIll = "DELETE FROM is_ill WHERE name=?";
-    try (Connection connection = connect();
-        PreparedStatement rmPerson = connection.prepareStatement(rmIsIll)) {
-      rmPerson.setString(1, zName);
-      rmPerson.executeUpdate();
-    } catch (SQLException e) {
-      System.out.println(e.getMessage());
-    }
-  }
-
-  public static void addPerson(String hName) {
-    String healthyPerson = "INSERT INTO person(name) VALUES(?);";
+  
+  public static void addIsCautious(String hName) {
+    String healthyPerson = "INSERT INTO is_cautious(name) VALUES(?);";
     try (Connection connection = connect();
         PreparedStatement addPerson = connection.prepareStatement(healthyPerson);) {
       addPerson.setString(1, hName);
@@ -117,6 +122,86 @@ public final class Database {
     }
 
   }
+  public static void addIsSocial(String hName) {
+    String healthyPerson = "INSERT INTO is_social(name) VALUES(?);";
+    try (Connection connection = connect();
+        PreparedStatement addPerson = connection.prepareStatement(healthyPerson);) {
+      addPerson.setString(1, hName);
+      addPerson.executeUpdate();
+    } catch (SQLException e) {
+      System.out.println(e.getMessage());
+    }
+
+  }
+  
+  public static void addInQuarantine(String hName) {
+    String healthyPerson = "INSERT INTO in_quarantine(name) VALUES(?);";
+    try (Connection connection = connect();
+        PreparedStatement addPerson = connection.prepareStatement(healthyPerson);) {
+      addPerson.setString(1, hName);
+      addPerson.executeUpdate();
+    } catch (SQLException e) {
+      System.out.println(e.getMessage());
+    }
+
+  }
+
+  public static void rmIsIll(String zName) {
+    String rmIsIll = "DELETE FROM is_ill WHERE name=?";
+    try (Connection connection = connect();
+        PreparedStatement rmPerson = connection.prepareStatement(rmIsIll)) {
+      rmPerson.setString(1, zName);
+      rmPerson.executeUpdate();
+    } catch (SQLException e) {
+      System.out.println(e.getMessage());
+    }
+  }
+  
+  public static void rmIsCautious(String zName) {
+    String rmIsIll = "DELETE FROM is_cautious WHERE name=?";
+    try (Connection connection = connect();
+        PreparedStatement rmPerson = connection.prepareStatement(rmIsIll)) {
+      rmPerson.setString(1, zName);
+      rmPerson.executeUpdate();
+    } catch (SQLException e) {
+      System.out.println(e.getMessage());
+    }
+  }
+  public static void rmIsSocial(String zName) {
+    String rmIsIll = "DELETE FROM is_social WHERE name=?";
+    try (Connection connection = connect();
+        PreparedStatement rmPerson = connection.prepareStatement(rmIsIll)) {
+      rmPerson.setString(1, zName);
+      rmPerson.executeUpdate();
+    } catch (SQLException e) {
+      System.out.println(e.getMessage());
+    }
+  }
+  
+  public static void rmIsResistant(String zName) {
+    String rmIsIll = "DELETE FROM is_resistant WHERE name=?";
+    try (Connection connection = connect();
+        PreparedStatement rmPerson = connection.prepareStatement(rmIsIll)) {
+      rmPerson.setString(1, zName);
+      rmPerson.executeUpdate();
+    } catch (SQLException e) {
+      System.out.println(e.getMessage());
+    }
+  }
+  
+  public static void rmInQuarantine(String zName) {
+    String rmIsIll = "DELETE FROM in_quarantine WHERE name=?";
+    try (Connection connection = connect();
+        PreparedStatement rmPerson = connection.prepareStatement(rmIsIll)) {
+      rmPerson.setString(1, zName);
+      rmPerson.executeUpdate();
+    } catch (SQLException e) {
+      System.out.println(e.getMessage());
+    }
+  }
+  
+
+
 
   public static void addPoint(String name, double d, double f) {
     String point = "INSERT INTO point(name,x,y) VALUES(?,?,?)";
@@ -153,7 +238,61 @@ public final class Database {
     }
   }
 
+  public static void addVaccinated(String hName) {
+    String healthyPerson = "INSERT INTO vaccinated(name) VALUES(?);";
+    try (Connection connection = connect();
+        PreparedStatement addPerson = connection.prepareStatement(healthyPerson);) {
+      addPerson.setString(1, hName);
+      addPerson.executeUpdate();
+    } catch (SQLException e) {
+      System.out.println(e.getMessage());
+    }
 
+  }
+  public static void addReinfected(String hName) {
+    String healthyPerson = "INSERT INTO reinfected(name) VALUES(?);";
+    try (Connection connection = connect();
+        PreparedStatement addPerson = connection.prepareStatement(healthyPerson);) {
+      addPerson.setString(1, hName);
+      addPerson.executeUpdate();
+    } catch (SQLException e) {
+      System.out.println(e.getMessage());
+    }
+
+  }
+  public static void addDies(String hName) {
+    String healthyPerson = "INSERT INTO dies(name) VALUES(?);";
+    try (Connection connection = connect();
+        PreparedStatement addPerson = connection.prepareStatement(healthyPerson);) {
+      addPerson.setString(1, hName);
+      addPerson.executeUpdate();
+    } catch (SQLException e) {
+      System.out.println(e.getMessage());
+    }
+
+  }
+  public static void addQuarantine(String hName) {
+    String healthyPerson = "INSERT INTO quarantine(name) VALUES(?);";
+    try (Connection connection = connect();
+        PreparedStatement addPerson = connection.prepareStatement(healthyPerson);) {
+      addPerson.setString(1, hName);
+      addPerson.executeUpdate();
+    } catch (SQLException e) {
+      System.out.println(e.getMessage());
+    }
+
+  }
+  public static void addRecovers(String hName) {
+    String healthyPerson = "INSERT INTO recovers(name) VALUES(?);";
+    try (Connection connection = connect();
+        PreparedStatement addPerson = connection.prepareStatement(healthyPerson);) {
+      addPerson.setString(1, hName);
+      addPerson.executeUpdate();
+    } catch (SQLException e) {
+      System.out.println(e.getMessage());
+    }
+
+  }
 
   /**
    * Comparing problog result with dbs record, filter out not logged person,which is fresh

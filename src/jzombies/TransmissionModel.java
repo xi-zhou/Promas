@@ -42,19 +42,15 @@ public final class TransmissionModel {
     interp.eval("from problog.logic import Term, Constant");
     interp.eval("from problog.logic import term2str");
     interp.eval("import json");
-    interp.eval("model= \"\"\"\n" + 
+    interp.eval("model=\"\"\"\n" + 
         ":- use_module(library(db)).\n" + 
         ":- sqlite_load('/Users/z.x/test.db').\n" + 
-        "P :: infects(PERSONx,PERSONy) :- point(PERSONx, X, Y),\n" + 
-        "point(PERSONy, A, B), PERSONx\\\\=PERSONy," + 
-        "D is sqrt((A-X)^2 + (B-Y)^2),D <10 , D>0,P is min(1,0.5/(D^2)).\n" + 
-        "\n" + 
-        "infects(PERSONx,PERSONy) :- point(PERSONx, X, Y)," + 
-        "point(PERSONy, X, Y).\n" + 
-        "ill(PERSONx):-infects(PERSONx,PERSONy), is_ill(PERSONy).\n" + 
-        "ill(PERSONx):-is_ill(PERSONx).\n" + 
-        "query(ill(PERSONx)).\n" + 
-        "\n" + 
+        "ill(X) :- is_ill(X), \\+recovers(X), \\+quarantine(X).\n" + 
+        "ill(X) :- infects(Y,X).\n" + 
+        "Pinfects :: infects(X,Y) :- is_ill(X), (is_cautious(Y); is_social(Y)), point(X, C, D),\n" + 
+        "point(Y, A, B), X\\\\=Y,\n" + 
+        "D is max(0.01,sqrt((A-C)^2 + (B-D)^2)),D <10 , D>0,P is min(1,0.5/(D^2)).\n" + 
+        "query(ill(X)).\n" + 
         "\"\"\"");
     interp.eval("result = get_evaluatable().create_from(PrologString(model)).evaluate()");
     interp.eval("res = {term2str(k):float(v) for k,v in result.items()}");

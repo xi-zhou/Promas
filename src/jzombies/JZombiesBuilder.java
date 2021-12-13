@@ -28,8 +28,7 @@ public class JZombiesBuilder implements ContextBuilder<Object> {
   @Override
   public Context build(Context<Object> context) {
     context.setId("jzombies"); // ID should be project name.
-    Database.create();
-    SocietyModel.create();
+
 
     NetworkBuilder<Object> netBuilder =
         new NetworkBuilder<Object>("infection network", context, true);
@@ -42,25 +41,21 @@ public class JZombiesBuilder implements ContextBuilder<Object> {
     Human.setInfectionRadius(infectionRadius);
     ContinuousSpaceFactory spaceFactory =
         ContinuousSpaceFactoryFinder.createContinuousSpaceFactory(null);
-    // use factory to create instance, create continuousSpace named space,every object added in
-    // here.
-    // name;context;adder with random location; border of grid;dimension.
+    
     ContinuousSpace<Object> space =
         spaceFactory.createContinuousSpace("space", context, new RandomCartesianAdder<Object>(),
             new repast.simphony.space.continuous.WrapAroundBorders(), gridSizeX, gridSizeY);
 
 
     GridFactory gridFactory = GridFactoryFinder.createGridFactory(null);
-    // true means two object in the same grid.
-    // SimpleGridAdder: not give location,but via build().
-
     Grid<Object> grid = gridFactory.createGrid("grid", context, new GridBuilderParameters<Object>(
         new WrapAroundBorders(), new SimpleGridAdder<Object>(), true, gridSizeX, gridSizeY)); // IF
                                                                                               // FALSE
+    Database.create();
+    SocietyModel.create();
     int zombieCount = (Integer) params.getValue("zombie_count");
     for (int i = 0; i < zombieCount; i++) {
       String zName = RandomStringUtils.random(8, true, true);
-      Database.addPerson(zName);
       Database.addIsIll(zName);
 
       context.add(new Zombie(space, grid, zName));
@@ -73,8 +68,7 @@ public class JZombiesBuilder implements ContextBuilder<Object> {
     for (int i = 0; i < resistanceHumanCount; i++) {
       String hName = RandomStringUtils.random(8, true, true);
 
-      Database.addPerson(hName);
-      Database.addResistance(hName);
+      Database.addIsResistant(hName);
       ResistanceHuman resistanceHuman = new ResistanceHuman(space, grid, hName);
       context.add(resistanceHuman);
     }
@@ -82,7 +76,7 @@ public class JZombiesBuilder implements ContextBuilder<Object> {
     for (int i = 0; i < socialHumanCount; i++) {
       String hName = RandomStringUtils.random(8, true, true);
 
-      Database.addPerson(hName);
+      Database.addIsSocial(hName);
       SocialHuman socialHuman = new SocialHuman(space, grid, hName);
       SocietyModel.addSocialHuman(socialHuman);
 
@@ -95,7 +89,7 @@ public class JZombiesBuilder implements ContextBuilder<Object> {
     for (int i = 0; i < cautiousHumanCount; i++) {
       String hName = RandomStringUtils.random(8, true, true);
 
-      Database.addPerson(hName);
+      Database.addIsCautious(hName);
       CautiousHuman cautiousHuman = new CautiousHuman(space, grid, hName);
       SocietyModel.addCautiousHuman(cautiousHuman);
       context.add(cautiousHuman);
