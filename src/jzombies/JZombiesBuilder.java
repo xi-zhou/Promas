@@ -28,8 +28,8 @@ public class JZombiesBuilder implements ContextBuilder<Object> {
   @Override
   public Context build(Context<Object> context) {
     context.setId("jzombies"); // ID should be project name.
-
-
+    
+    
     NetworkBuilder<Object> netBuilder =
         new NetworkBuilder<Object>("infection network", context, true);
     netBuilder.buildNetwork();

@@ -2,7 +2,9 @@
 output/
 
 .DS_Store
-
+debug.log
+debug.log.1
+velocity.log
 
 
 

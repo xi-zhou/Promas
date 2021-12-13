@@ -17,12 +17,9 @@ import repast.simphony.random.RandomHelper;
 
 
 public final class TransmissionModel {
-  private static ArrayList<String> infectedPerson = new ArrayList<String>();
   static String res;
-  static SharedInterpreter interp;
   static double prob;
-
-
+  
   private TransmissionModel() {}
 
   static TransmissionModel create() throws JepException {
@@ -33,8 +30,8 @@ public final class TransmissionModel {
   @ScheduledMethod(start = 0.5, interval = 1)
   public static void loadModel() throws JepException {
     long startTime = System.currentTimeMillis();
-    System.out.println("load model...");
-    interp = new SharedInterpreter();
+    System.out.println("load infection model...");
+    SharedInterpreter interp = new SharedInterpreter();
     interp.eval("from jep import redirect_streams");
     interp.eval("redirect_streams.setup()");
     interp.eval("from problog.program import PrologString");
@@ -59,17 +56,17 @@ public final class TransmissionModel {
     interp.close();
     long endTime = System.currentTimeMillis();
     System.out.println("Calculation took " + (endTime - startTime) + " milliseconds");
-    getResFromJep();
   }
 
   /**
    * Take a random subset from problog model.
+   * @return 
    */
-  public static void getResFromJep() {
+  public static ArrayList<String> getResFromJep() {
     Gson gson = new Gson();
     Type type = new TypeToken<Map<String, Float>>() {}.getType();
     Map<String, Float> myMap = gson.fromJson(res, type);
-  
+    ArrayList<String> infectedPerson = new ArrayList<String>();
     // compare to random seed
     double seed = RandomHelper.nextDoubleFromTo(0.0,1.0);
     for(Entry<String,Float>entry:myMap.entrySet()) {
@@ -78,14 +75,6 @@ public final class TransmissionModel {
         infectedPerson.add(name[1]);
       }
     }
-  }
-  
-  /**
-   * Get result from problog model
-   * 
-   * @return list contains current all infected person
-   */
-  public static ArrayList<String> getInfectedPerson() {
     return infectedPerson;
   }
 

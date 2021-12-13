@@ -120,7 +120,6 @@ public final class Database {
     } catch (SQLException e) {
       System.out.println(e.getMessage());
     }
-
   }
   public static void addIsSocial(String hName) {
     String healthyPerson = "INSERT INTO is_social(name) VALUES(?);";
@@ -131,7 +130,6 @@ public final class Database {
     } catch (SQLException e) {
       System.out.println(e.getMessage());
     }
-
   }
   
   public static void addInQuarantine(String hName) {
@@ -143,7 +141,6 @@ public final class Database {
     } catch (SQLException e) {
       System.out.println(e.getMessage());
     }
-
   }
 
   public static void rmIsIll(String zName) {
@@ -200,9 +197,6 @@ public final class Database {
     }
   }
   
-
-
-
   public static void addPoint(String name, double d, double f) {
     String point = "INSERT INTO point(name,x,y) VALUES(?,?,?)";
     try (Connection connection = connect();
@@ -214,8 +208,6 @@ public final class Database {
     } catch (SQLException e) {
       System.out.println(e.getMessage());
     }
-
-
   }
 
   /**
@@ -247,7 +239,6 @@ public final class Database {
     } catch (SQLException e) {
       System.out.println(e.getMessage());
     }
-
   }
   public static void addReinfected(String hName) {
     String healthyPerson = "INSERT INTO reinfected(name) VALUES(?);";
@@ -258,7 +249,6 @@ public final class Database {
     } catch (SQLException e) {
       System.out.println(e.getMessage());
     }
-
   }
   public static void addDies(String hName) {
     String healthyPerson = "INSERT INTO dies(name) VALUES(?);";
@@ -269,8 +259,8 @@ public final class Database {
     } catch (SQLException e) {
       System.out.println(e.getMessage());
     }
-
   }
+  
   public static void addQuarantine(String hName) {
     String healthyPerson = "INSERT INTO quarantine(name) VALUES(?);";
     try (Connection connection = connect();
@@ -280,8 +270,8 @@ public final class Database {
     } catch (SQLException e) {
       System.out.println(e.getMessage());
     }
-
   }
+  
   public static void addRecovers(String hName) {
     String healthyPerson = "INSERT INTO recovers(name) VALUES(?);";
     try (Connection connection = connect();
@@ -291,7 +281,6 @@ public final class Database {
     } catch (SQLException e) {
       System.out.println(e.getMessage());
     }
-
   }
 
   /**
@@ -306,7 +295,7 @@ public final class Database {
 
     oldInfection = new ArrayList<String>();
     allInfection = new ArrayList<String>();
-    allInfection = TransmissionModel.getInfectedPerson();
+    allInfection = TransmissionModel.getResFromJep();
     String findIll = "SELECT * from is_ill";
 
     try (Connection connection = connect();
@@ -321,18 +310,14 @@ public final class Database {
     }
     newInfection = (ArrayList<String>) allInfection.clone();
     newInfection.removeAll(oldInfection);
-
-
   }
 
   public static ArrayList<String> getNewInfection() {
     return newInfection;
   }
 
-
   public static void removeFromList(String hName) {
     newInfection.remove(hName);
   }
-
 
 }
