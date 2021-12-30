@@ -75,6 +75,8 @@ public class Human {
 
   public void vaccination() {
     Database.addIsResistant(name);
+    Database.addVaccinated(name);
+    Database.rmNewResistantFromList(name);
     System.out.println(name + " is vaccinated");
     GridPoint pt = grid.getLocation(this);
     NdPoint spacePt = space.getLocation(this);

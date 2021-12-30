@@ -20,9 +20,10 @@ public class CautiousHuman extends Human {
     GridPoint pt = grid.getLocation(this);
     GridPoint location = findLocation(grid, pt);
     super.moveTowards(location, 2);
-    double seed = RandomHelper.nextDoubleFromTo(0.0, 1.0);
+    //double seed = RandomHelper.nextDoubleFromTo(0.0, 1.0);
 
-    if (seed > 0.9) {
+    if (Database.getNewResistant()!=null &&Database.getNewResistant().contains(name)) {
+      Database.rmIsCautious(name);
       super.vaccination();
     }
   }

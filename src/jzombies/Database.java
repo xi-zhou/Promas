@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import jep.JepException;
 import repast.simphony.engine.schedule.ScheduledMethod;
 
 public final class Database {
@@ -18,8 +19,42 @@ public final class Database {
   // String url = "jdbc:sqlite:/Users/z.x/testDB/"+tt+".db";
   static String url = "jdbc:sqlite:/Users/z.x/test.db";
   static ArrayList<String> newInfection;
-  static ArrayList<String> oldInfection;
-  static ArrayList<String> allInfection;
+  static ArrayList<String> newQuarantine;
+  static ArrayList<String> newResistant;
+  static ArrayList<String> newDead;
+  static ArrayList<String> newReinfection;
+  
+  public static ArrayList<String> getNewInfection() {
+    return newInfection;
+  }
+  public static void rmNewInfectFromList(String hName) {
+    newInfection.remove(hName);
+  }
+  
+
+  public static ArrayList<String> getNewQuarantine() {
+    return newQuarantine;
+  }
+  public static void rmQuarantineFromList(String hName) {
+    newQuarantine.remove(hName);
+  }
+  
+
+  public static ArrayList<String> getNewResistant() {
+    return newResistant;
+  }
+  public static void rmNewResistantFromList(String hName) {
+    newResistant.remove(hName);
+  }
+  
+
+  public static ArrayList<String> getNewDead() {
+    return newDead;
+  }
+  public static void rmNewDeadFromList(String hName) {
+    newDead.remove(hName);
+  }
+
 
   /**
    * Create empty database with three empty table:person,point,isIll.Corresponding problog term.
@@ -34,7 +69,7 @@ public final class Database {
         + "	PRIMARY KEY(\"name\")\n" + ");";
     String isResistant = "CREATE TABLE \"is_resistant\" (\n" + "   \"name\"    TEXT UNIQUE,\n"
         + " PRIMARY KEY(\"name\")\n" + ");";
-    String isQuarantine = "CREATE TABLE \"in_quarantine\" (\n" + "   \"name\"    TEXT UNIQUE,\n"
+    String inQuarantine = "CREATE TABLE \"in_quarantine\" (\n" + "   \"name\"    TEXT UNIQUE,\n"
         + " PRIMARY KEY(\"name\")\n" + ");";
     String pointTable = "CREATE TABLE \"point\" (\n" + "    \"name\"  TEXT UNIQUE,\n"
         + "    \"x\" REAL,\n" + "    \"y\" REAL,\n" + "    PRIMARY KEY(\"name\")\n" + ");";
@@ -62,6 +97,7 @@ public final class Database {
         statement.execute(isSocial);
         statement.execute(isIll);
         statement.execute(isResistant);
+        statement.execute(inQuarantine);
         statement.execute(pointTable);
         statement.execute(vaccinated);
         statement.execute(reinfected);
@@ -104,8 +140,8 @@ public final class Database {
     String resisPerson = "INSERT INTO is_resistant(name) VALUES(?)";
     try (Connection connection = connect();
         PreparedStatement addPerson = connection.prepareStatement(resisPerson);) {
-      addPerson.executeUpdate();
       addPerson.setString(1, zName);
+      addPerson.executeUpdate();
     } catch (SQLException e) {
       System.out.println(e.getMessage());
     }
@@ -261,16 +297,7 @@ public final class Database {
     }
   }
   
-  public static void addQuarantine(String hName) {
-    String healthyPerson = "INSERT INTO quarantine(name) VALUES(?);";
-    try (Connection connection = connect();
-        PreparedStatement addPerson = connection.prepareStatement(healthyPerson);) {
-      addPerson.setString(1, hName);
-      addPerson.executeUpdate();
-    } catch (SQLException e) {
-      System.out.println(e.getMessage());
-    }
-  }
+
   
   public static void addRecovers(String hName) {
     String healthyPerson = "INSERT INTO recovers(name) VALUES(?);";
@@ -293,8 +320,13 @@ public final class Database {
   @ScheduledMethod(start = 0.8, interval = 1)
   public static void findNewInfected() {
 
-    oldInfection = new ArrayList<String>();
-    allInfection = new ArrayList<String>();
+    ArrayList<String> oldInfection = new ArrayList<String>();
+    ArrayList<String> allInfection = new ArrayList<String>();
+    try {
+      TransmissionModel.loadModel();
+    } catch (JepException e1) {
+      e1.printStackTrace();
+    }
     allInfection = TransmissionModel.getResFromJep();
     String findIll = "SELECT * from is_ill";
 
@@ -310,14 +342,98 @@ public final class Database {
     }
     newInfection = (ArrayList<String>) allInfection.clone();
     newInfection.removeAll(oldInfection);
+    System.out.println("INFECTION: "+ newInfection.toString());
   }
+ 
+  @ScheduledMethod(start = 0.85, interval = 1)
+  public static void findNewQuarantine() {
 
-  public static ArrayList<String> getNewInfection() {
-    return newInfection;
-  }
+    ArrayList<String> oldQuarantine = new ArrayList<String>();
+    ArrayList<String> allQuarantine = new ArrayList<String>();
 
-  public static void removeFromList(String hName) {
-    newInfection.remove(hName);
+    try {
+      ProgressionModel.quarantine();
+    } catch (JepException e1) {
+      e1.printStackTrace();
+    }
+    allQuarantine = ProgressionModel.getResFromJep("Quarantine");
+  
+    String findQuarantine = "SELECT * from in_quarantine";
+    
+    try (Connection connection = connect();
+        PreparedStatement checkIllExist = connection.prepareStatement(findQuarantine);) {
+      ResultSet rs = checkIllExist.executeQuery();
+
+      while (rs.next()) {
+        oldQuarantine.add(rs.getString("name"));
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    newQuarantine = (ArrayList<String>) allQuarantine.clone();
+    newQuarantine.removeAll(oldQuarantine);
+    System.out.println("QUARANTINE: "+ newQuarantine.toString());
   }
+  
+  @ScheduledMethod(start = 0.9, interval = 1)
+  public static void findNewResistant() {
+
+    ArrayList<String> oldResistant = new ArrayList<String>();
+    ArrayList<String> allResistant = new ArrayList<String>();
+    try {
+     ProgressionModel.resistant();
+    } catch (JepException e1) {
+      // TODO Auto-generated catch block
+      e1.printStackTrace();
+    }
+    allResistant = ProgressionModel.getResFromJep("Resistant");
+    String findIll = "SELECT * from is_resistant";
+
+    try (Connection connection = connect();
+        PreparedStatement checkIllExist = connection.prepareStatement(findIll);) {
+      ResultSet rs = checkIllExist.executeQuery();
+
+      while (rs.next()) {
+        oldResistant.add(rs.getString("name"));
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    newResistant = (ArrayList<String>) allResistant.clone();
+    newResistant .removeAll(oldResistant);
+    System.out.println("RESISTANT: "+ newResistant.toString());
+  }
+  
+  @ScheduledMethod(start = 0.95, interval = 1)
+  public static void findNewDead() {
+
+    ArrayList<String> oldDead = new ArrayList<String>();
+    ArrayList<String> allDead = new ArrayList<String>();
+    try {
+     ProgressionModel.dies();
+    } catch (JepException e1) {
+      e1.printStackTrace();
+    }
+    allDead = ProgressionModel.getResFromJep("Die");
+    String findIll = "SELECT * from is_resistant";
+
+    try (Connection connection = connect();
+        PreparedStatement checkIllExist = connection.prepareStatement(findIll);) {
+      ResultSet rs = checkIllExist.executeQuery();
+
+      while (rs.next()) {
+        oldDead.add(rs.getString("name"));
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    newDead = (ArrayList<String>) allDead.clone();
+    newDead .removeAll(oldDead);
+    System.out.println("DEAD: "+ newDead.toString());
+  }
+  
+
+
+
 
 }

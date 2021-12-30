@@ -17,12 +17,10 @@ public class SocialHuman extends Human {
     GridPoint partyPos = SocietyModel.getPartyLocation(this.name);
     moveTowards(partyPos, 4);
 
-    double seed = RandomHelper.nextDoubleFromTo(0.0, 1.0);
-
-    if (seed > 0.95) {
-      vaccination();
-    }
+    if (Database.getNewResistant().contains(name)) {
+      Database.rmIsSocial(name);
+      super.vaccination();  
   }
 
-
+  }
 }

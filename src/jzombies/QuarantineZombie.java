@@ -14,14 +14,20 @@ public class QuarantineZombie extends Human {
   public QuarantineZombie(ContinuousSpace<Object> space, Grid<Object> grid, String hName) {
     super(space, grid, hName);
   }
-
-  @ScheduledMethod(start = 2.5, interval = 2)
-  public void recover() {
-    double seed = RandomHelper.nextDoubleFromTo(0.0, 1.0);
-    if (seed > 0.99) {
+  
+  @ScheduledMethod(start = 1, interval = 1)
+  public void run() {
+    if (Database.getNewResistant().contains(name)) {
+      recover();
+    }else if (Database.getNewDead().contains(name)) {
       dead();
-    } else if (seed > 0.7) {
-      Database.rmIsIll(name);
+    }
+  }
+
+  public void recover() {
+    Database.rmInQuarantine(name);
+    Database.rmNewResistantFromList(name);
+    Database.addRecovers(name);
       Database.addIsResistant(name);
       System.out.println(name + " after quarantine recovred");
       GridPoint pt = grid.getLocation(this);
@@ -34,10 +40,13 @@ public class QuarantineZombie extends Human {
       space.moveTo(human, spacePt.getX(), spacePt.getY());
       grid.moveTo(human, pt.getX(), pt.getY());
 
-    }
   }
 
   private void dead() {
+    Database.rmInQuarantine(name);
+    Database.rmNewDeadFromList(name);
+    Database.addDies(name);
+
     System.out.println(name + " during quarantine dead");
     GridPoint pt = grid.getLocation(this);
     NdPoint spacePt = space.getLocation(this);
@@ -50,7 +59,4 @@ public class QuarantineZombie extends Human {
     grid.moveTo(human, pt.getX(), pt.getY());
 
   }
-
-
-
 }
