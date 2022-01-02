@@ -1,6 +1,7 @@
 package jzombies;
 
 import repast.simphony.engine.schedule.ScheduledMethod;
+import repast.simphony.random.RandomHelper;
 import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridPoint;
@@ -12,6 +13,7 @@ public class ResistanceHuman extends Human {
 
   @ScheduledMethod(start = 1, interval = 1)
   public void run() {
+    double seed = RandomHelper.nextDoubleFromTo(0.0, 1.0);
     GridPoint pt = grid.getLocation(this);
     GridPoint location;
 

@@ -1,5 +1,6 @@
 package jzombies;
 
+import java.util.HashMap;
 import java.util.List;
 import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.query.space.grid.GridCell;
@@ -19,10 +20,10 @@ public class CautiousHuman extends Human {
   public void run() {
     GridPoint pt = grid.getLocation(this);
     GridPoint location = findLocation(grid, pt);
-    super.moveTowards(location, 2);
-    //double seed = RandomHelper.nextDoubleFromTo(0.0, 1.0);
-
-    if (Database.getNewResistant()!=null &&Database.getNewResistant().contains(name)) {
+    moveTowards(location, 2);
+    double seed = RandomHelper.nextDoubleFromTo(0.0, 1.0);
+    HashMap<String, Float> newResistant = Database.getNewResistant();
+    if (newResistant.containsKey(name) && (newResistant.get(name) >= seed)) {
       Database.rmIsCautious(name);
       super.vaccination();
     }

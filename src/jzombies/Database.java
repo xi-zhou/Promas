@@ -8,8 +8,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
-
+import java.util.HashMap;
+import java.util.Map.Entry;
 import org.apache.commons.lang3.RandomStringUtils;
 import jep.JepException;
 import repast.simphony.engine.schedule.ScheduledMethod;
@@ -19,38 +21,42 @@ public final class Database {
   // String url = "jdbc:sqlite:/Users/z.x/testDB/"+tt+".db";
   static String url = "jdbc:sqlite:/Users/z.x/test.db";
   static ArrayList<String> newInfection;
-  static ArrayList<String> newQuarantine;
-  static ArrayList<String> newResistant;
-  static ArrayList<String> newDead;
+  static HashMap<String, Float> newQuarantine;
+  static HashMap<String, Float> newResistant;
+  static HashMap<String, Float> newDead;
   static ArrayList<String> newReinfection;
-  
+
   public static ArrayList<String> getNewInfection() {
     return newInfection;
   }
+
   public static void rmNewInfectFromList(String hName) {
     newInfection.remove(hName);
   }
-  
 
-  public static ArrayList<String> getNewQuarantine() {
+
+  public static HashMap<String, Float> getNewQuarantine() {
     return newQuarantine;
   }
+
   public static void rmQuarantineFromList(String hName) {
     newQuarantine.remove(hName);
   }
-  
 
-  public static ArrayList<String> getNewResistant() {
+
+  public static HashMap<String, Float> getNewResistant() {
     return newResistant;
   }
+
   public static void rmNewResistantFromList(String hName) {
     newResistant.remove(hName);
   }
-  
 
-  public static ArrayList<String> getNewDead() {
+
+  public static HashMap<String, Float> getNewDead() {
     return newDead;
   }
+
   public static void rmNewDeadFromList(String hName) {
     newDead.remove(hName);
   }
@@ -60,9 +66,9 @@ public final class Database {
    * Create empty database with three empty table:person,point,isIll.Corresponding problog term.
    */
   private Database() {
-    String isCautious= "CREATE TABLE \"is_cautious\" (\n" + "	\"name\"	TEXT UNIQUE,\n"
+    String isCautious = "CREATE TABLE \"is_cautious\" (\n" + "	\"name\"	TEXT UNIQUE,\n"
         + "	PRIMARY KEY(\"name\")\n" + ");";
-    String isSocial= "CREATE TABLE \"is_social\" (\n" + "   \"name\"    TEXT UNIQUE,\n"
+    String isSocial = "CREATE TABLE \"is_social\" (\n" + "   \"name\"    TEXT UNIQUE,\n"
         + " PRIMARY KEY(\"name\")\n" + ");";
 
     String isIll = "CREATE TABLE \"is_ill\" (\n" + "	\"name\"	TEXT UNIQUE,\n"
@@ -75,13 +81,13 @@ public final class Database {
         + "    \"x\" REAL,\n" + "    \"y\" REAL,\n" + "    PRIMARY KEY(\"name\")\n" + ");";
     String vaccinated = "CREATE TABLE \"vaccinated\" (\n" + "    \"name\"    TEXT UNIQUE,\n"
         + " PRIMARY KEY(\"name\")\n" + ");";
-    String reinfected= "CREATE TABLE \"reinfected\" (\n" + "    \"name\"    TEXT UNIQUE,\n"
+    String reinfected = "CREATE TABLE \"reinfected\" (\n" + "    \"name\"    TEXT UNIQUE,\n"
         + " PRIMARY KEY(\"name\")\n" + ");";
-    String dies= "CREATE TABLE \"dies\" (\n" + "    \"name\"    TEXT UNIQUE,\n"
+    String dies = "CREATE TABLE \"dies\" (\n" + "    \"name\"    TEXT UNIQUE,\n"
         + " PRIMARY KEY(\"name\")\n" + ");";
-    String quarantine= "CREATE TABLE \"quarantine\" (\n" + "    \"name\"    TEXT UNIQUE,\n"
+    String quarantine = "CREATE TABLE \"quarantine\" (\n" + "    \"name\"    TEXT UNIQUE,\n"
         + " PRIMARY KEY(\"name\")\n" + ");";
-    String recovers= "CREATE TABLE \"recovers\" (\n" + "    \"name\"    TEXT UNIQUE,\n"
+    String recovers = "CREATE TABLE \"recovers\" (\n" + "    \"name\"    TEXT UNIQUE,\n"
         + " PRIMARY KEY(\"name\")\n" + ");";
 
     try {
@@ -146,7 +152,7 @@ public final class Database {
       System.out.println(e.getMessage());
     }
   }
-  
+
   public static void addIsCautious(String hName) {
     String healthyPerson = "INSERT INTO is_cautious(name) VALUES(?);";
     try (Connection connection = connect();
@@ -157,6 +163,7 @@ public final class Database {
       System.out.println(e.getMessage());
     }
   }
+
   public static void addIsSocial(String hName) {
     String healthyPerson = "INSERT INTO is_social(name) VALUES(?);";
     try (Connection connection = connect();
@@ -167,7 +174,7 @@ public final class Database {
       System.out.println(e.getMessage());
     }
   }
-  
+
   public static void addInQuarantine(String hName) {
     String healthyPerson = "INSERT INTO in_quarantine(name) VALUES(?);";
     try (Connection connection = connect();
@@ -189,7 +196,7 @@ public final class Database {
       System.out.println(e.getMessage());
     }
   }
-  
+
   public static void rmIsCautious(String zName) {
     String rmIsIll = "DELETE FROM is_cautious WHERE name=?";
     try (Connection connection = connect();
@@ -200,6 +207,7 @@ public final class Database {
       System.out.println(e.getMessage());
     }
   }
+
   public static void rmIsSocial(String zName) {
     String rmIsIll = "DELETE FROM is_social WHERE name=?";
     try (Connection connection = connect();
@@ -210,7 +218,7 @@ public final class Database {
       System.out.println(e.getMessage());
     }
   }
-  
+
   public static void rmIsResistant(String zName) {
     String rmIsIll = "DELETE FROM is_resistant WHERE name=?";
     try (Connection connection = connect();
@@ -221,7 +229,7 @@ public final class Database {
       System.out.println(e.getMessage());
     }
   }
-  
+
   public static void rmInQuarantine(String zName) {
     String rmIsIll = "DELETE FROM in_quarantine WHERE name=?";
     try (Connection connection = connect();
@@ -232,7 +240,29 @@ public final class Database {
       System.out.println(e.getMessage());
     }
   }
-  
+
+  public static void rmReinfected(String hName) {
+    String healthyPerson = "DELETE FROM reinfected WHERE name=?";
+    try (Connection connection = connect();
+        PreparedStatement addPerson = connection.prepareStatement(healthyPerson);) {
+      addPerson.setString(1, hName);
+      addPerson.executeUpdate();
+    } catch (SQLException e) {
+      System.out.println(e.getMessage());
+    }
+  }
+
+  public static void rmRecovers(String hName) {
+    String healthyPerson = "DELETE FROM recovers WHERE name=?";
+    try (Connection connection = connect();
+        PreparedStatement addPerson = connection.prepareStatement(healthyPerson);) {
+      addPerson.setString(1, hName);
+      addPerson.executeUpdate();
+    } catch (SQLException e) {
+      System.out.println(e.getMessage());
+    }
+  }
+
   public static void addPoint(String name, double d, double f) {
     String point = "INSERT INTO point(name,x,y) VALUES(?,?,?)";
     try (Connection connection = connect();
@@ -276,6 +306,7 @@ public final class Database {
       System.out.println(e.getMessage());
     }
   }
+
   public static void addReinfected(String hName) {
     String healthyPerson = "INSERT INTO reinfected(name) VALUES(?);";
     try (Connection connection = connect();
@@ -286,6 +317,7 @@ public final class Database {
       System.out.println(e.getMessage());
     }
   }
+
   public static void addDies(String hName) {
     String healthyPerson = "INSERT INTO dies(name) VALUES(?);";
     try (Connection connection = connect();
@@ -296,9 +328,9 @@ public final class Database {
       System.out.println(e.getMessage());
     }
   }
-  
 
-  
+
+
   public static void addRecovers(String hName) {
     String healthyPerson = "INSERT INTO recovers(name) VALUES(?);";
     try (Connection connection = connect();
@@ -342,14 +374,14 @@ public final class Database {
     }
     newInfection = (ArrayList<String>) allInfection.clone();
     newInfection.removeAll(oldInfection);
-    System.out.println("INFECTION: "+ newInfection.toString());
+    // System.out.println("INFECTION: "+ newInfection.toString());
   }
- 
+
   @ScheduledMethod(start = 0.85, interval = 1)
   public static void findNewQuarantine() {
 
     ArrayList<String> oldQuarantine = new ArrayList<String>();
-    ArrayList<String> allQuarantine = new ArrayList<String>();
+    HashMap<String, Float> allQuarantine = new HashMap<String, Float>();
 
     try {
       ProgressionModel.quarantine();
@@ -357,9 +389,9 @@ public final class Database {
       e1.printStackTrace();
     }
     allQuarantine = ProgressionModel.getResFromJep("Quarantine");
-  
+
     String findQuarantine = "SELECT * from in_quarantine";
-    
+
     try (Connection connection = connect();
         PreparedStatement checkIllExist = connection.prepareStatement(findQuarantine);) {
       ResultSet rs = checkIllExist.executeQuery();
@@ -370,18 +402,23 @@ public final class Database {
     } catch (SQLException e) {
       e.printStackTrace();
     }
-    newQuarantine = (ArrayList<String>) allQuarantine.clone();
-    newQuarantine.removeAll(oldQuarantine);
-    System.out.println("QUARANTINE: "+ newQuarantine.toString());
+    newQuarantine = (HashMap<String, Float>) allQuarantine.clone();
+
+    for (Entry<String, Float> entry : allQuarantine.entrySet()) {
+      if (!oldQuarantine.contains(entry.getKey())) {
+        newQuarantine.put(entry.getKey(), entry.getValue());
+      }
+    }
+    // System.out.println("QUARANTINE: "+ Arrays.toString(newQuarantine.keySet().toArray()));
   }
-  
+
   @ScheduledMethod(start = 0.9, interval = 1)
   public static void findNewResistant() {
 
     ArrayList<String> oldResistant = new ArrayList<String>();
-    ArrayList<String> allResistant = new ArrayList<String>();
+    HashMap<String, Float> allResistant = new HashMap<String, Float>();
     try {
-     ProgressionModel.resistant();
+      ProgressionModel.resistant();
     } catch (JepException e1) {
       // TODO Auto-generated catch block
       e1.printStackTrace();
@@ -399,23 +436,28 @@ public final class Database {
     } catch (SQLException e) {
       e.printStackTrace();
     }
-    newResistant = (ArrayList<String>) allResistant.clone();
-    newResistant .removeAll(oldResistant);
-    System.out.println("RESISTANT: "+ newResistant.toString());
+    newResistant = (HashMap<String, Float>) allResistant.clone();
+
+    for (Entry<String, Float> entry : allResistant.entrySet()) {
+      if (!oldResistant.contains(entry.getKey())) {
+        newResistant.put(entry.getKey(), entry.getValue());
+      }
+    }
+    // System.out.println("RESISTANT: "+ Arrays.toString(newResistant.keySet().toArray()));
   }
-  
-  @ScheduledMethod(start = 0.95, interval = 1)
+
+  @ScheduledMethod(start = 1.95, interval = 1)
   public static void findNewDead() {
 
     ArrayList<String> oldDead = new ArrayList<String>();
-    ArrayList<String> allDead = new ArrayList<String>();
+    HashMap<String, Float> allDead = new HashMap<String, Float>();
     try {
-     ProgressionModel.dies();
+      ProgressionModel.dies();
     } catch (JepException e1) {
       e1.printStackTrace();
     }
     allDead = ProgressionModel.getResFromJep("Die");
-    String findIll = "SELECT * from is_resistant";
+    String findIll = "SELECT * from dies";
 
     try (Connection connection = connect();
         PreparedStatement checkIllExist = connection.prepareStatement(findIll);) {
@@ -427,12 +469,15 @@ public final class Database {
     } catch (SQLException e) {
       e.printStackTrace();
     }
-    newDead = (ArrayList<String>) allDead.clone();
-    newDead .removeAll(oldDead);
-    System.out.println("DEAD: "+ newDead.toString());
-  }
-  
+    newDead = (HashMap<String, Float>) allDead.clone();
 
+    for (Entry<String, Float> entry : allDead.entrySet()) {
+      if (!oldDead.contains(entry.getKey())) {
+        newDead.put(entry.getKey(), entry.getValue());
+      }
+    }
+    // System.out.println("DEAD: "+ Arrays.toString(newDead.keySet().toArray()));
+  }
 
 
 

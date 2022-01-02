@@ -1,5 +1,6 @@
 package jzombies;
 
+import java.util.HashMap;
 import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.random.RandomHelper;
 import repast.simphony.space.continuous.ContinuousSpace;
@@ -14,13 +15,15 @@ public class SocialHuman extends Human {
 
   @ScheduledMethod(start = 1, interval = 1)
   public void run() {
+    double seed = RandomHelper.nextDoubleFromTo(0.0, 1.0);
+
     GridPoint partyPos = SocietyModel.getPartyLocation(this.name);
     moveTowards(partyPos, 4);
-
-    if (Database.getNewResistant().contains(name)) {
+    HashMap<String, Float> newResistant = Database.getNewResistant();
+    if (newResistant.containsKey(name) && (newResistant.get(name) >= seed)) {
       Database.rmIsSocial(name);
-      super.vaccination();  
-  }
+      vaccination();
+    }
 
   }
 }

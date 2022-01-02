@@ -23,13 +23,11 @@ import repast.simphony.space.grid.SimpleGridAdder;
 import repast.simphony.space.grid.WrapAroundBorders;
 
 public class JZombiesBuilder implements ContextBuilder<Object> {
-  private static Map<Integer, List<SocialHuman>> group = new HashMap<Integer, List<SocialHuman>>();
 
   @Override
   public Context build(Context<Object> context) {
     context.setId("jzombies"); // ID should be project name.
-    
-    
+
     NetworkBuilder<Object> netBuilder =
         new NetworkBuilder<Object>("infection network", context, true);
     netBuilder.buildNetwork();
@@ -41,7 +39,7 @@ public class JZombiesBuilder implements ContextBuilder<Object> {
     Human.setInfectionRadius(infectionRadius);
     ContinuousSpaceFactory spaceFactory =
         ContinuousSpaceFactoryFinder.createContinuousSpaceFactory(null);
-    
+
     ContinuousSpace<Object> space =
         spaceFactory.createContinuousSpace("space", context, new RandomCartesianAdder<Object>(),
             new repast.simphony.space.continuous.WrapAroundBorders(), gridSizeX, gridSizeY);
@@ -82,7 +80,7 @@ public class JZombiesBuilder implements ContextBuilder<Object> {
 
       context.add(socialHuman);
     }
-
+    Map<Integer, List<SocialHuman>> group = new HashMap<Integer, List<SocialHuman>>();
     group = SocietyModel.group();
     SocietyModel.organizeParty(space, group);
 

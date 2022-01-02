@@ -2,6 +2,7 @@ package jzombies;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import com.google.gson.Gson;
@@ -27,7 +28,7 @@ public class ProgressionModel {
   
   public static void quarantine() throws JepException {
     long startTime = System.currentTimeMillis();
-    System.out.println("load quarantine model...");
+    //System.out.println("load quarantine model...");
     interp = new SharedInterpreter();
     interp.eval("from jep import redirect_streams");
     interp.eval("redirect_streams.setup()");
@@ -50,12 +51,12 @@ public class ProgressionModel {
     resQua = interp.getValue("jsQua", String.class);
     interp.close();
     long endTime = System.currentTimeMillis();
-    System.out.println("Calculation took " + (endTime - startTime) + " milliseconds");
+    System.out.println("(quarantine model) Calculation took " + (endTime - startTime) + " milliseconds");
   }
   
   public static void resistant() throws JepException {
     long startTime = System.currentTimeMillis();
-    System.out.println("load resistance model...");
+    //System.out.println("load resistance model...");
     interp = new SharedInterpreter();
     interp.eval("from jep import redirect_streams");
     interp.eval("redirect_streams.setup()");
@@ -73,7 +74,7 @@ public class ProgressionModel {
         "resistant(PERSONx) :- recovers(PERSONx);vaccinated(PERSONx).\n" + 
         "0.02 ::  recovers(PERSONx) :- is_ill(PERSONx).\n" + 
         "0.05 :: recovers(PERSONx) :- in_quarantine(PERSONx).\n" + 
-        "0.2 :: vaccinated(PERSONx) :- is_cautious(PERSONx).\n" + 
+        "0.15 :: vaccinated(PERSONx) :- is_cautious(PERSONx).\n" + 
         "0.1::  vaccinated(PERSONx) :- is_social(PERSONx).\n" + 
         "query(resistant(PERSONx)).\n" + 
         "\"\"\"");
@@ -83,13 +84,13 @@ public class ProgressionModel {
     resResis = interp.getValue("jsVacc", String.class);
     interp.close();
     long endTime = System.currentTimeMillis();
-    System.out.println("Calculation took " + (endTime - startTime) + " milliseconds");
+    System.out.println("(resistance model) Calculation took " + (endTime - startTime) + " milliseconds");
   }  
   
 
   public static void dies() throws JepException {
     long startTime = System.currentTimeMillis();
-    System.out.println("load death model...");
+    //System.out.println("load death model...");
     interp = new SharedInterpreter();
     interp.eval("from jep import redirect_streams");
     interp.eval("redirect_streams.setup()");
@@ -110,7 +111,7 @@ public class ProgressionModel {
     resDie = interp.getValue("js", String.class);
     interp.close();
     long endTime = System.currentTimeMillis();
-    System.out.println("Calculation took " + (endTime - startTime) + " milliseconds");
+    System.out.println("(death model) Calculation took " + (endTime - startTime) + " milliseconds");
   }
 
   
@@ -118,10 +119,10 @@ public class ProgressionModel {
    * @param trans identifier of result of problog model
    * @return 
    */
-  public static ArrayList<String> getResFromJep(String pattern) {
+  public static HashMap<String, Float> getResFromJep(String pattern) {
     Gson gson = new Gson();
     Type type = new TypeToken<Map<String, Float>>() {}.getType();
-    ArrayList<String> progression = new ArrayList<String>();
+    HashMap<String, Float> progression = new HashMap<String, Float>();
     Map<String, Float> myMap = null;
     switch(pattern) {
       case "Quarantine":
@@ -135,12 +136,9 @@ public class ProgressionModel {
         break;
     }
 
-    double seed = RandomHelper.nextDoubleFromTo(0.0, 1.0);
     for (Entry<String, Float> entry : myMap.entrySet()) {
-      if (entry.getValue() >= (float) seed && !entry.getKey().contains("None")) {
         String name[] = entry.getKey().split("'");
-        progression.add(name[1]);
-      }
+        progression.put(name[1],entry.getValue());
     }
     return progression;
   }

@@ -36,7 +36,7 @@ public class Human {
     Human.infectionRadius = infectionRadius;
   }
 
-  public GridPoint findLocation(Grid<Object> grid, GridPoint pt) {
+  protected GridPoint findLocation(Grid<Object> grid, GridPoint pt) {
     GridCellNgh<Human> nghCreator = new GridCellNgh<Human>(grid, pt, Human.class, 1, 1);
     List<GridCell<Human>> gridCells = nghCreator.getNeighborhood(true);
     SimUtilities.shuffle(gridCells, RandomHelper.getUniform());
@@ -59,7 +59,7 @@ public class Human {
    * 
    * @param pt random point
    */
-  public void moveTowards(GridPoint pt, double distance) {
+  protected void moveTowards(GridPoint pt, double distance) {
     // only move if we are not already in this grid location
     if (!pt.equals(grid.getLocation(this))) {
       NdPoint myPoint = space.getLocation(this);
@@ -73,7 +73,7 @@ public class Human {
   }
 
 
-  public void vaccination() {
+  protected void vaccination() {
     Database.addIsResistant(name);
     Database.addVaccinated(name);
     Database.rmNewResistantFromList(name);
@@ -90,13 +90,13 @@ public class Human {
 
   }
 
-  public List<GridCell<Human>> getNgh(Grid<Object> grid, GridPoint pt, int size) {
+  protected List<GridCell<Human>> getNgh(Grid<Object> grid, GridPoint pt, int size) {
     GridCellNgh<Human> nghCreator = new GridCellNgh<Human>(grid, pt, Human.class, size, size);
     List<GridCell<Human>> gridCells = nghCreator.getNeighborhood(true);
     return gridCells;
   }
 
-  public <T, E> Set<T> getKeysByValue(Map<T, E> map, E value) {
+  protected <T, E> Set<T> getKeysByValue(Map<T, E> map, E value) {
     Set<T> keys = new HashSet<T>();
     for (Entry<T, E> entry : map.entrySet()) {
       if (Objects.equals(value, entry.getValue())) {

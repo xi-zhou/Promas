@@ -30,7 +30,7 @@ public final class TransmissionModel {
   //@ScheduledMethod(start = 0.5, interval = 1)
   public static void loadModel() throws JepException {
     long startTime = System.currentTimeMillis();
-    System.out.println("load infection model...");
+    //System.out.println("load infection model...");
     SharedInterpreter interp = new SharedInterpreter();
     interp.eval("from jep import redirect_streams");
     interp.eval("redirect_streams.setup()");
@@ -39,7 +39,7 @@ public final class TransmissionModel {
     interp.eval("from problog.logic import Term, Constant");
     interp.eval("from problog.logic import term2str");
     interp.eval("import json");
-    interp.eval("model=\"\"\"\n" + 
+    interp.eval("infection=\"\"\"\n" + 
         ":- use_module(library(db)).\n" + 
         ":- sqlite_load('/Users/z.x/test.db').\n" + 
         "\n" + 
@@ -58,13 +58,13 @@ public final class TransmissionModel {
         "\n" + 
         "query(ill(PERSONx)).\n" + 
         "\"\"\"");
-    interp.eval("result = get_evaluatable().create_from(PrologString(model)).evaluate()");
+    interp.eval("result = get_evaluatable().create_from(PrologString(infection)).evaluate()");
     interp.eval("res = {term2str(k):float(v) for k,v in result.items()}");
     interp.eval("js = json.dumps(res)");
     res = interp.getValue("js", String.class);
     interp.close();
     long endTime = System.currentTimeMillis();
-    System.out.println("Calculation took " + (endTime - startTime) + " milliseconds");
+    System.out.println("(infection model) Calculation took " + (endTime - startTime) + " milliseconds");
   }
 
   /**

@@ -16,7 +16,7 @@ public final class SocietyModel {
   private static Map<String, GridPoint> partyLocationMap = new HashMap<String, GridPoint>();
 
   /**
-   * @return a many to one relation map, contains all social agent name and their partylocation 
+   * @return a many to one relation map, contains all social agent name and their partylocation
    */
   public static Map<String, GridPoint> getPartyLocationMap() {
     return partyLocationMap;
@@ -41,13 +41,13 @@ public final class SocietyModel {
     socialHuman.add(human);
   }
 
-  public static void addCautiousHuman(CautiousHuman human) {
+  static void addCautiousHuman(CautiousHuman human) {
     cautiousHuman.add(human);
   }
 
   public static boolean isSocial(String name) {
-    for(SocialHuman human:socialHuman) {
-      if(human.name.equals(name)) {
+    for (SocialHuman human : socialHuman) {
+      if (human.name.equals(name)) {
         return true;
       }
     }
@@ -56,8 +56,8 @@ public final class SocietyModel {
   }
 
   public static boolean isCautious(String name) {
-    for(CautiousHuman human:cautiousHuman) {
-      if(human.name.equals(name)) {
+    for (CautiousHuman human : cautiousHuman) {
+      if (human.name.equals(name)) {
         return true;
       }
     }
@@ -66,10 +66,11 @@ public final class SocietyModel {
 
   /**
    * assign social human into different group.
+   * 
    * @return a map, contains unique groupID and the agents in it.
    */
   public static Map<Integer, List<SocialHuman>> group() {
-  
+
     for (int i = 0; i < numOfGroups; ++i) {
       group.put(i, new ArrayList<>());
     }
@@ -83,6 +84,7 @@ public final class SocietyModel {
 
   /**
    * for each group find a party location
+   * 
    * @param space
    * @param group map with one to many relationship
    */
@@ -100,6 +102,7 @@ public final class SocietyModel {
 
   /**
    * find partylocation for A group of social person by computing centroid of polygon.
+   * 
    * @param space
    * @param grpId unique group id
    * @param friends list of human in a group

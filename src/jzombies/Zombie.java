@@ -3,6 +3,7 @@ package jzombies;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import repast.simphony.context.Context;
@@ -26,16 +27,18 @@ public class Zombie extends Human {
 
   @ScheduledMethod(start = 1, interval = 1)
   public void run() {
+    double seed = RandomHelper.nextDoubleFromTo(0.0, 1.0);
 
     GridPoint pt = grid.getLocation(this);
     List<GridCell<Human>> gridCells = getNgh(grid, pt, super.infectionRadius);
 
-    //double seed = RandomHelper.nextDoubleFromTo(0.0, 1.0);
-    if (Database.getNewQuarantine().contains(name)) {
+    HashMap<String, Float> newResistant = Database.getNewResistant();
+    HashMap<String, Float> newQuarantine = Database.getNewQuarantine();
+    if (newQuarantine.containsKey(name) && (newQuarantine.get(name) >= seed)) {
       quarantine();
-    }else if (Database.getNewResistant().contains(name)) {
+    } else if (newResistant.containsKey(name) && (newResistant.get(name) >= seed)) {
       recover();
-    }else {
+    } else {
       infect(gridCells);
       GridPoint location = findLocation(grid, pt);
       moveTowards(location, 3);
@@ -60,7 +63,7 @@ public class Zombie extends Human {
 
   }
 
-  /**find next location depend on different agent type*/
+  /** find next location depend on different agent type */
   @Override
   public GridPoint findLocation(Grid<Object> grid, GridPoint pt) {
     List<GridCell<Human>> ngh = getNgh(grid, pt, 1);
@@ -84,7 +87,7 @@ public class Zombie extends Human {
     }
   }
 
-  public static <E> Collection<E> makeCollection(Iterable<E> iter) {
+  private static <E> Collection<E> makeCollection(Iterable<E> iter) {
     Collection<E> list = new ArrayList<E>();
     for (E item : iter) {
       list.add(item);
@@ -92,27 +95,15 @@ public class Zombie extends Human {
     return list;
   }
 
-  public void infect(List<GridCell<Human>> gridCells) {
+  private void infect(List<GridCell<Human>> gridCells) {
     ArrayList<String> newInfection = new ArrayList<String>();
-
     GridPoint pt = grid.getLocation(this);
-    List<Object> humans = new ArrayList<Object>();
+    ArrayList<Object> humans = new ArrayList<Object>();
 
-    // get all humans at zombies'grid
-    Collection<Object> objInList = new ArrayList<Object>();
-
-    for (GridCell cell : gridCells) {
-      objInList = makeCollection(cell.items());
-      for (Object obj : objInList) {
-        if (obj instanceof SocialHuman || obj instanceof CautiousHuman|| obj instanceof ResistanceHuman) {
-          humans.add(obj);
-        }
-      }
-    }
-
-
+    humans = humanInNgh(gridCells);
     newInfection = Database.getNewInfection();
-    //System.out.println("new and reinfection: "+newInfection);
+
+    // System.out.println("new and reinfection: "+newInfection);
     // for each zombie check if there are humans in its moore neighborhood, if yes than for each
     // human check if there name in the new infection list,if yes add name to isIll
     if (humans.size() > 0) {
@@ -132,15 +123,17 @@ public class Zombie extends Human {
             System.out.println(hName + " reinfection");
             Database.addReinfected(hName);
             Database.rmIsResistant(hName);
+            Database.rmRecovers(hName);
           } else if (obj instanceof CautiousHuman) {
             Database.rmIsCautious(hName);
             System.out.println("Infecting " + hName);
-          }else {
+          } else {
             System.out.println("Infecting " + hName);
             Database.rmIsSocial(hName);
           }
 
           Database.rmNewInfectFromList(hName);
+
           NdPoint spacePt = space.getLocation(obj);
           Context<Object> context = ContextUtils.getContext(obj);
           context.remove(obj);
@@ -164,22 +157,37 @@ public class Zombie extends Human {
   }
 
 
-  public void recover() {
+  private void recover() {
     Database.addRecovers(name);
     Database.addIsResistant(name);
-      Database.rmIsIll(name);
-      Database.rmNewResistantFromList(name);
+    Database.rmIsIll(name);
+    Database.rmNewResistantFromList(name);
+    Database.rmReinfected(name);
+    System.out.println(name + " is recovred");
+    GridPoint pt = grid.getLocation(this);
+    NdPoint spacePt = space.getLocation(this);
+    Context<Object> context = ContextUtils.getContext(this);
+    context.remove(this);
 
-      System.out.println(name + " is recovred");
-      GridPoint pt = grid.getLocation(this);
-      NdPoint spacePt = space.getLocation(this);
-      Context<Object> context = ContextUtils.getContext(this);
-      context.remove(this);
-
-      ResistanceHuman human = new ResistanceHuman(space, grid, name);
-      context.add(human);
-      space.moveTo(human, spacePt.getX(), spacePt.getY());
-      grid.moveTo(human, pt.getX(), pt.getY());
+    ResistanceHuman human = new ResistanceHuman(space, grid, name);
+    context.add(human);
+    space.moveTo(human, spacePt.getX(), spacePt.getY());
+    grid.moveTo(human, pt.getX(), pt.getY());
   }
 
+  private ArrayList<Object> humanInNgh(List<GridCell<Human>> gridCells) {
+    ArrayList<Object> humans = new ArrayList<Object>();
+    Collection<Object> objInList = new ArrayList<Object>();
+
+    for (GridCell cell : gridCells) {
+      objInList = makeCollection(cell.items());
+      for (Object obj : objInList) {
+        if (obj instanceof SocialHuman || obj instanceof CautiousHuman
+            || obj instanceof ResistanceHuman) {
+          humans.add(obj);
+        }
+      }
+    }
+    return humans;
+  }
 }
