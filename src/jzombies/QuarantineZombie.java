@@ -26,8 +26,10 @@ public class QuarantineZombie extends Human {
     HashMap<String, Float> newResistant = Database.getNewResistant();
     if (newResistant.containsKey(name) && (newResistant.get(name) >= seed)) {
       recover();
-    } else if (newDead.containsKey(name) && (newDead.get(name) >= seed)) {
+    } else if (newDead != null && newDead.containsKey(name) && (newDead.get(name) >= seed)) {
       dead();
+    } else {
+
     }
   }
 

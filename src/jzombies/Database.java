@@ -8,11 +8,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map.Entry;
-import org.apache.commons.lang3.RandomStringUtils;
 import jep.JepException;
 import repast.simphony.engine.schedule.ScheduledMethod;
 
@@ -95,9 +92,9 @@ public final class Database {
     } catch (ClassNotFoundException e1) {
       e1.printStackTrace();
     }
-    try (Connection connection = this.connect()) {
+    try (Connection connection = Database.connect()) {
       if (connection != null) {
-        DatabaseMetaData meta = connection.getMetaData();
+        connection.getMetaData();
         Statement statement = connection.createStatement();
         statement.execute(isCautious);
         statement.execute(isSocial);
@@ -446,7 +443,7 @@ public final class Database {
     // System.out.println("RESISTANT: "+ Arrays.toString(newResistant.keySet().toArray()));
   }
 
-  @ScheduledMethod(start = 1.95, interval = 1)
+  @ScheduledMethod(start = 0.95, interval = 1)
   public static void findNewDead() {
 
     ArrayList<String> oldDead = new ArrayList<String>();
@@ -478,7 +475,5 @@ public final class Database {
     }
     // System.out.println("DEAD: "+ Arrays.toString(newDead.keySet().toArray()));
   }
-
-
 
 }

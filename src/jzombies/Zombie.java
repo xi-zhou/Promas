@@ -104,13 +104,13 @@ public class Zombie extends Human {
     newInfection = Database.getNewInfection();
 
     // System.out.println("new and reinfection: "+newInfection);
+
     // for each zombie check if there are humans in its moore neighborhood, if yes than for each
     // human check if there name in the new infection list,if yes add name to isIll
     if (humans.size() > 0) {
 
-      for (int i = 0; i < humans.size(); i++) {
+      for (Object obj : humans) {
 
-        Object obj = humans.get(i);
         String hName = null;
         try {
           hName = (String) FieldUtils.readField(obj, "name", true);
