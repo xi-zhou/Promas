@@ -29,18 +29,12 @@ public class ProgressionModel {
     interp = new SharedInterpreter();
     interp.eval("from jep import redirect_streams");
     interp.eval("redirect_streams.setup()");
-    interp.eval("from problog.program import PrologString");
+    interp.eval("from problog.program import PrologFile");
     interp.eval("from problog import get_evaluatable");
-    interp.eval("from problog.logic import Term, Constant");
     interp.eval("from problog.logic import term2str");
     interp.eval("import json");
-    interp.eval("quarantine=\"\"\"\n" + ":- use_module(library(db)).\n"
-        + ":- sqlite_load('/Users/z.x/test.db').\n"
-        + "quarantine(PERSONx) :- in_quarantine(PERSONx),\\+dies(PERSONx), \\+recovers(PERSONx).\n"
-        + "quarantine(PERSONx) :- isolation(PERSONx).\n"
-        + "0.1:: isolation(PERSONx) :- is_ill(PERSONx).\n" + "query(quarantine(PERSONx)).\n"
-        + "\"\"\"");
-    interp.eval("resultQua = get_evaluatable().create_from(PrologString(quarantine)).evaluate()");
+    interp.eval(
+        "resultQua = get_evaluatable().create_from(PrologFile('/Users/z.x/eclipse-workspace-2020-06/JZombies_Demo/misc/quarantine.pl')).evaluate()");
     interp.eval("resQua = {term2str(k):float(v) for k,v in resultQua.items()}");
     interp.eval("jsQua = json.dumps(resQua)");
     resQua = interp.getValue("jsQua", String.class);
@@ -56,21 +50,12 @@ public class ProgressionModel {
     interp = new SharedInterpreter();
     interp.eval("from jep import redirect_streams");
     interp.eval("redirect_streams.setup()");
-    interp.eval("from problog.program import PrologString");
+    interp.eval("from problog.program import PrologFile");
     interp.eval("from problog import get_evaluatable");
-    interp.eval("from problog.logic import Term, Constant");
     interp.eval("from problog.logic import term2str");
     interp.eval("import json");
-    interp.eval("resistant=\"\"\"\n" + ":- use_module(library(db)).\n"
-        + ":- sqlite_load('/Users/z.x/test.db').\n" + "\n" + "\n"
-        + "resistant(PERSONx) :- is_resistant(PERSONx), \\+reinfected(PERSONx).\n"
-        + "resistant(PERSONx) :- recovers(PERSONx);vaccinated(PERSONx).\n"
-        + "0.03 ::  recovers(PERSONx) :- is_ill(PERSONx).\n"
-        + "0.06 :: recovers(PERSONx) :- in_quarantine(PERSONx).\n"
-        + "0.1 :: vaccinated(PERSONx) :- is_cautious(PERSONx).\n"
-        + "0.08::  vaccinated(PERSONx) :- is_social(PERSONx).\n" + "query(resistant(PERSONx)).\n"
-        + "\"\"\"");
-    interp.eval("resultVacc = get_evaluatable().create_from(PrologString(resistant)).evaluate()");
+    interp.eval(
+        "resultVacc = get_evaluatable().create_from(PrologFile('/Users/z.x/eclipse-workspace-2020-06/JZombies_Demo/misc/resistant.pl')).evaluate()");
     interp.eval("resultVacc = {term2str(k):float(v) for k,v in resultVacc.items()}");
     interp.eval("jsVacc = json.dumps(resultVacc)");
     resResis = interp.getValue("jsVacc", String.class);
@@ -87,16 +72,12 @@ public class ProgressionModel {
     interp = new SharedInterpreter();
     interp.eval("from jep import redirect_streams");
     interp.eval("redirect_streams.setup()");
-    interp.eval("from problog.program import PrologString");
+    interp.eval("from problog.program import PrologFile");
     interp.eval("from problog import get_evaluatable");
-    interp.eval("from problog.logic import Term, Constant");
     interp.eval("from problog.logic import term2str");
     interp.eval("import json");
-    interp.eval("death = \"\"\"\n" + ":- use_module(library(db)).\n"
-        + ":- sqlite_load('/Users/z.x/test.db').\n"
-        + "0.01:: dies(PERSONx) :- in_quarantine(PERSONx).\n" + "query(dies(PERSONx)).\n"
-        + "\"\"\"");
-    interp.eval("result = get_evaluatable().create_from(PrologString(death)).evaluate()");
+    interp.eval(
+        "result = get_evaluatable().create_from(PrologFile('/Users/z.x/eclipse-workspace-2020-06/JZombies_Demo/misc/death.pl')).evaluate()");
     interp.eval("res = {term2str(k):float(v) for k,v in result.items()}");
     interp.eval("js = json.dumps(res)");
     resDie = interp.getValue("js", String.class);

@@ -29,24 +29,13 @@ public final class TransmissionModel {
     SharedInterpreter interp = new SharedInterpreter();
     interp.eval("from jep import redirect_streams");
     interp.eval("redirect_streams.setup()");
-    interp.eval("from problog.program import PrologString");
+    interp.eval("from problog.program import PrologFile");
     interp.eval("from problog import get_evaluatable");
-    interp.eval("from problog.logic import Term, Constant");
     interp.eval("from problog.logic import term2str");
     interp.eval("import json");
-    interp.eval("infection=\"\"\"\n" + ":- use_module(library(db)).\n"
-        + ":- sqlite_load('/Users/z.x/test.db').\n" + "\n"
-        + "P :: infects(PERSONx,PERSONy) :- point(PERSONx, X, Y),\n"
-        + "point(PERSONy, A, B), PERSONx\\\\=PERSONy,\n"
-        + "D is sqrt((A-X)^2 + (B-Y)^2),D <10 , D>0,P is min(1,0.5/(D^2)).\n" + "\n"
-        + "P :: reinfects(PERSONx,PERSONy) :- point(PERSONx, X, Y),\n"
-        + "point(PERSONy, A, B), PERSONx\\\\=PERSONy,\n"
-        + "D is sqrt((A-X)^2 + (B-Y)^2),D <10 , D>0,P is min(1,0.1/(D^2)).\n" + "\n"
-        + "ill(PERSONx):-is_ill(PERSONy),is_cautious(PERSONx); is_social(PERSONx),infects(PERSONx,PERSONy).\n"
-        + "ill(PERSONx):-is_ill(PERSONx),\\+recovers(PERSONx), \\+in_quarantine(PERSONx).\n" + "\n"
-        + "ill(PERSONx) :- is_ill(PERSONy), is_resistant(PERSONx),reinfects(PERSONx,PERSONy).\n"
-        + "\n" + "query(ill(PERSONx)).\n" + "\"\"\"");
-    interp.eval("result = get_evaluatable().create_from(PrologString(infection)).evaluate()");
+    interp.eval("result = get_evaluatable()."
+        + "create_from(PrologFile('/Users/z.x/eclipse-workspace-2020-06/JZombies_Demo/misc/infection.pl'))."
+        + "evaluate()");
     interp.eval("res = {term2str(k):float(v) for k,v in result.items()}");
     interp.eval("js = json.dumps(res)");
     res = interp.getValue("js", String.class);

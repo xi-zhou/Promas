@@ -14,9 +14,9 @@ import jep.JepException;
 import repast.simphony.engine.schedule.ScheduledMethod;
 
 public final class Database {
-  // static // static String tt = RandomStringUtils.random(8, true, false);
-  // String url = "jdbc:sqlite:/Users/z.x/testDB/"+tt+".db";
-  static String url = "jdbc:sqlite:/Users/z.x/test.db";
+  static String url =
+  "jdbc:sqlite:/Users/z.x/eclipse-workspace-2020-06/JZombies_Demo/misc/test.db";
+  
   static ArrayList<String> newInfection;
   static HashMap<String, Float> newQuarantine;
   static HashMap<String, Float> newResistant;

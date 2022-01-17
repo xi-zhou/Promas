@@ -13,7 +13,6 @@ public class ResistanceHuman extends Human {
 
   @ScheduledMethod(start = 1, interval = 1)
   public void run() {
-    RandomHelper.nextDoubleFromTo(0.0, 1.0);
     GridPoint pt = grid.getLocation(this);
     GridPoint location;
 
