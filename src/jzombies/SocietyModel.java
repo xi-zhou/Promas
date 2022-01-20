@@ -12,7 +12,6 @@ public final class SocietyModel {
   private static List<SocialHuman> socialHuman = new ArrayList<SocialHuman>();
   private static List<CautiousHuman> cautiousHuman = new ArrayList<CautiousHuman>();
   private static Map<Integer, List<SocialHuman>> group = new HashMap<Integer, List<SocialHuman>>();
-  final static int numOfGroups = 4;
   private static Map<String, GridPoint> partyLocationMap = new HashMap<String, GridPoint>();
 
   /**
@@ -66,17 +65,18 @@ public final class SocietyModel {
 
   /**
    * assign social human into different group.
+   * @param numGrp 
    * 
    * @return a map, contains unique groupID and the agents in it.
    */
-  public static Map<Integer, List<SocialHuman>> group() {
+  public static Map<Integer, List<SocialHuman>> group(int numGrp) {
 
-    for (int i = 0; i < numOfGroups; ++i) {
+    for (int i = 0; i < numGrp; ++i) {
       group.put(i, new ArrayList<>());
     }
     final int N = socialHuman.size();
     for (int i = 0; i < N; ++i) {
-      group.get(i % numOfGroups).add(socialHuman.get(i));
+      group.get(i % numGrp).add(socialHuman.get(i));
     }
     return group;
 

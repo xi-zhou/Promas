@@ -81,7 +81,8 @@ public class JZombiesBuilder implements ContextBuilder<Object> {
       context.add(socialHuman);
     }
     Map<Integer, List<SocialHuman>> group = new HashMap<Integer, List<SocialHuman>>();
-    group = SocietyModel.group();
+    int numGrp = (Integer) params.getValue("numGrp");
+    group = SocietyModel.group(numGrp);
     SocietyModel.organizeParty(space, group);
 
     for (int i = 0; i < cautiousHumanCount; i++) {

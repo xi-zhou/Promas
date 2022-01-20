@@ -15,7 +15,7 @@ import repast.simphony.engine.schedule.ScheduledMethod;
 
 public final class Database {
   static String url =
-  "jdbc:sqlite:/Users/z.x/eclipse-workspace-2020-06/JZombies_Demo/misc/test.db";
+  "jdbc:sqlite:./misc/test.db";
   
   static ArrayList<String> newInfection;
   static HashMap<String, Float> newQuarantine;
