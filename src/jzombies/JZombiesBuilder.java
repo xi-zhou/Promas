@@ -36,6 +36,7 @@ public class JZombiesBuilder implements ContextBuilder<Object> {
     int gridSizeX = (Integer) params.getValue("grid_size_x");
     int gridSizeY = (Integer) params.getValue("grid_size_y");
     int infectionRadius = (Integer) params.getValue("infection_radius");
+
     Human.setInfectionRadius(infectionRadius);
     ContinuousSpaceFactory spaceFactory =
         ContinuousSpaceFactoryFinder.createContinuousSpaceFactory(null);
@@ -82,8 +83,9 @@ public class JZombiesBuilder implements ContextBuilder<Object> {
     }
     Map<Integer, List<SocialHuman>> group = new HashMap<Integer, List<SocialHuman>>();
     int numGrp = (Integer) params.getValue("numGrp");
+    boolean useRanLoc = (Boolean) params.getValue("use_random_loc");
     group = SocietyModel.group(numGrp);
-    SocietyModel.organizeParty(space, group);
+    SocietyModel.organizeParty(space, group,useRanLoc);
 
     for (int i = 0; i < cautiousHumanCount; i++) {
       String hName = RandomStringUtils.random(8, true, true);

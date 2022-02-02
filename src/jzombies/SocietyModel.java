@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import repast.simphony.random.RandomHelper;
 import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.grid.GridPoint;
 
@@ -87,16 +88,17 @@ public final class SocietyModel {
    * 
    * @param space
    * @param group map with one to many relationship
+   * @param useCentroid 
    */
   public static void organizeParty(ContinuousSpace<Object> space,
-      Map<Integer, List<SocialHuman>> group) {
+      Map<Integer, List<SocialHuman>> group, boolean useRanLoc) {
     List<SocialHuman> friends = new ArrayList<>();
     int grpId;
 
     for (Entry<Integer, List<SocialHuman>> entry : group.entrySet()) {
       friends = entry.getValue();
       grpId = entry.getKey();
-      findPartyLocation(space, grpId, friends);
+      findPartyLocation(space, grpId, friends,useRanLoc);
     }
   }
 
@@ -106,10 +108,17 @@ public final class SocietyModel {
    * @param space
    * @param grpId unique group id
    * @param friends list of human in a group
+   * @param useCentroid 
    */
   private static void findPartyLocation(ContinuousSpace<Object> space, int grpId,
-      List<SocialHuman> friends) {
-
+      List<SocialHuman> friends, boolean useRanLoc) {
+    GridPoint partyLocation;
+    
+    if(useRanLoc) {
+      double x  = RandomHelper.nextDoubleFromTo(0.0, space.getDimensions().getWidth());
+      double y = RandomHelper.nextDoubleFromTo(0.0, space.getDimensions().getHeight());
+      partyLocation = new GridPoint((int)x, (int) y);
+    }else {
     List<Double> xPos = new ArrayList<>();
 
     List<Double> yPos = new ArrayList<>();
@@ -130,12 +139,14 @@ public final class SocietyModel {
     double centerY = (yMax + yMin) / 2;
     double centerX = (xMax + xMin) / 2;
 
-    GridPoint partyLocation = new GridPoint((int) centerY, (int) centerX);
+    partyLocation = new GridPoint((int) centerY, (int) centerX);
+    }
+    
     for (SocialHuman human : friends) {
       partyLocationMap.put(human.name, partyLocation);
     }
 
-    System.out.println(grpId + " meeting at " + (int) centerY + " " + (int) centerX);
+    System.out.println(grpId + " meeting at " + (int) partyLocation.getX() + " " + (int) partyLocation.getY());
   }
 
 

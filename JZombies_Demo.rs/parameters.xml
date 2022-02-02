@@ -47,6 +47,11 @@
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"		
 		/>
+				<parameter name="use_random_loc" displayName="Random Party Location" type="boolean" 
+						defaultValue="false" 
+						isReadOnly="false" 
+						converter="repast.simphony.parameter.StringConverterFactory$BooleanConverter"		
+		/>
 		</parameters>
 
 
