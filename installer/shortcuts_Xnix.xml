@@ -3,10 +3,10 @@
 
   <skipIfNotSupported/>
 
-  <programGroup defaultName="JZombies_Demo" location="StartMenu"/>
+  <programGroup defaultName="Promas" location="StartMenu"/>
   
   <shortcut
-     name="JZombies_Demo"
+     name="Promas"
      programGroup="yes"
      desktop="no"
      applications="no"
@@ -16,7 +16,7 @@
      commandLine=""
      workingDirectory="$INSTALL_PATH"
      description="Model"
-     iconFile="$INSTALL_PATH/JZombies_Demo/icons/model.png"
+     iconFile="$INSTALL_PATH/Promas/icons/model.png"
      iconIndex="0"
      type="Application"
      encoding="UTF-8"
@@ -33,13 +33,13 @@
      applications="no"
      startMenu="no"
      startup="no"
-     target="$INSTALL_PATH/JZombies_Demo/docs/index.html"
+     target="$INSTALL_PATH/Promas/docs/index.html"
      workingDirectory="$INSTALL_PATH/docs"
      commandLine=""
      initialState="noShow"
      iconFile="help"
      iconIndex="0" 
-     url="$INSTALL_PATH/JZombies_Demo/docs/index.html"                                
+     url="$INSTALL_PATH/Promas/docs/index.html"                                
      type="Application"
      encoding="UTF-8" 
    	 createForAll="true"  
@@ -48,7 +48,7 @@
   </shortcut>
    
   <shortcut
-     name="JZombies_Demo Uninstaller"
+     name="Promas Uninstaller"
      programGroup="yes"
      desktop="no"
      applications="no"

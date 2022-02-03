@@ -10,3 +10,5 @@ velocity.log
 
 bin/
 misc/test.db
+
+*.log
