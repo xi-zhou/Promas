@@ -79,7 +79,7 @@ public class Human {
     Database.addIsResistant(name);
     Database.addVaccinated(name);
     Database.rmNewResistantFromList(name);
-    System.out.println(name + " is vaccinated");
+    //System.out.println(name + " is vaccinated");
     GridPoint pt = grid.getLocation(this);
     NdPoint spacePt = space.getLocation(this);
     Context<Object> context = ContextUtils.getContext(this);

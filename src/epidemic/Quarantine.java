@@ -39,7 +39,7 @@ public class Quarantine extends Human {
     Database.rmReinfected(name);
     Database.addRecovers(name);
     Database.addIsResistant(name);
-    System.out.println(name + " after quarantine recovred");
+    //System.out.println(name + " after quarantine recovred");
     GridPoint pt = grid.getLocation(this);
     NdPoint spacePt = space.getLocation(this);
     Context<Object> context = ContextUtils.getContext(this);
@@ -57,7 +57,7 @@ public class Quarantine extends Human {
     Database.rmNewDeadFromList(name);
     Database.addDies(name);
 
-    System.out.println(name + " during quarantine dead");
+    //System.out.println(name + " during quarantine dead");
     GridPoint pt = grid.getLocation(this);
     NdPoint spacePt = space.getLocation(this);
     Context<Object> context = ContextUtils.getContext(this);

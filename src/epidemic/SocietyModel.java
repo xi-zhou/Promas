@@ -92,17 +92,17 @@ public final class SocietyModel {
    * 
    * @param space
    * @param group map with one to many relationship
-   * @param useRanLoc if to use a random location
+   * @param useCenterLoc use a random location or center of group
    */
   public static void organizeParty(ContinuousSpace<Object> space,
-      Map<Integer, List<SocialHuman>> group, boolean useRanLoc) {
+      Map<Integer, List<SocialHuman>> group, boolean useCenterLoc) {
     List<SocialHuman> friends = new ArrayList<>();
     int grpId;
 
     for (Entry<Integer, List<SocialHuman>> entry : group.entrySet()) {
       friends = entry.getValue();
       grpId = entry.getKey();
-      findPartyLocation(space, grpId, friends, useRanLoc);
+      findPartyLocation(space, grpId, friends, useCenterLoc);
     }
   }
 
@@ -113,13 +113,13 @@ public final class SocietyModel {
    * @param space
    * @param grpId unique group id
    * @param friends list of human in a group
-   * @param useRanLoc if to use a random location
+   * @param useCenterLoc use a random location or center of group
    */
   private static void findPartyLocation(ContinuousSpace<Object> space, int grpId,
-      List<SocialHuman> friends, boolean useRanLoc) {
+      List<SocialHuman> friends, boolean useCenterLoc) {
     GridPoint partyLocation;
 
-    if (useRanLoc) {
+    if (!useCenterLoc) {
       double x = RandomHelper.nextDoubleFromTo(0.0, space.getDimensions().getWidth());
       double y = RandomHelper.nextDoubleFromTo(0.0, space.getDimensions().getHeight());
       partyLocation = new GridPoint((int) x, (int) y);
@@ -151,8 +151,8 @@ public final class SocietyModel {
       partyLocationMap.put(human.name, partyLocation);
     }
 
-    System.out.println(
-        grpId + " meeting at " + partyLocation.getX() + " " + partyLocation.getY());
+//    System.out.println(
+//        grpId + " meeting at " + partyLocation.getX() + " " + partyLocation.getY());
   }
 
 

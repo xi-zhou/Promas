@@ -56,7 +56,7 @@ public class Infected extends Human {
     Database.rmQuarantineFromList(name);
     Database.addInQuarantine(name);
 
-    System.out.println(name + " is in quarantine");
+    //System.out.println(name + " is in quarantine");
     GridPoint pt = grid.getLocation(this);
     NdPoint spacePt = space.getLocation(this);
     Context<Object> context = ContextUtils.getContext(this);
@@ -134,15 +134,15 @@ public class Infected extends Human {
         if (newInfection.contains(hName)) {
           Database.addIsIll(hName);
           if (obj instanceof Resistant) {
-            System.out.println(hName + " reinfection");
+            //System.out.println(hName + " reinfection");
             Database.addReinfected(hName);
             Database.rmIsResistant(hName);
             Database.rmRecovers(hName);
           } else if (obj instanceof CautiousHuman) {
             Database.rmIsCautious(hName);
-            System.out.println("Infecting " + hName);
+            //System.out.println("Infecting " + hName);
           } else {
-            System.out.println("Infecting " + hName);
+            //System.out.println("Infecting " + hName);
             Database.rmIsSocial(hName);
           }
 
@@ -176,7 +176,7 @@ public class Infected extends Human {
     Database.rmIsIll(name);
     Database.rmNewResistantFromList(name);
     Database.rmReinfected(name);
-    System.out.println(name + " is recovred");
+    //System.out.println(name + " is recovred");
     GridPoint pt = grid.getLocation(this);
     NdPoint spacePt = space.getLocation(this);
     Context<Object> context = ContextUtils.getContext(this);

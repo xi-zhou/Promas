@@ -103,7 +103,7 @@ public final class Database {
         statement.execute(dies);
         statement.execute(quarantine);
         statement.execute(recovers);
-        System.out.println("A new database has been created.");
+        //System.out.println("A new database has been created.");
       }
     } catch (SQLException e) {
       e.printStackTrace();

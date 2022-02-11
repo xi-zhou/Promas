@@ -80,9 +80,9 @@ public class SimBuilder implements ContextBuilder<Object> {
     }
     Map<Integer, List<SocialHuman>> group = new HashMap<Integer, List<SocialHuman>>();
     int numGrp = (Integer) params.getValue("numGrp");
-    boolean useRanLoc = (Boolean) params.getValue("use_random_loc");
+    boolean useCenterLoc = (Boolean) params.getValue("use_center_loc");
     group = SocietyModel.group(numGrp);
-    SocietyModel.organizeParty(space, group, useRanLoc);
+    SocietyModel.organizeParty(space, group, useCenterLoc);
 
     for (int i = 0; i < cautiousHumanCount; i++) {
       String hName = RandomStringUtils.random(8, true, true);
